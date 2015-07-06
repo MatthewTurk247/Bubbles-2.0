@@ -92,6 +92,7 @@ class InfoScene:SKScene {
         backButtonIcon.position = CGPoint(x: backButton.frame.width/2.222, y: self.frame.height * 0.9333)
         backButtonIcon.zPosition = 7
         backButtonIcon.name = "backButtonIcon"
+        backButtonIcon.setScale(0.1)
         self.addChild(backButtonIcon)
         
         let blackStrip = SKShapeNode(rect: CGRect(x: backButton.frame.width, y: self.frame.height - (self.frame.height * 0.14), width: self.frame.width * 0.75, height: self.frame.height * 0.14))
@@ -103,6 +104,7 @@ class InfoScene:SKScene {
         
         tutorialButton.position = CGPoint(x: backButton.frame.width + (backButton.frame.width * 1.5), y: self.frame.height * 0.93)
         tutorialButton.zPosition = 6
+        tutorialButton.setScale(0.125)
         self.addChild(tutorialButton)
         
         let redStrip = SKShapeNode(rect: CGRect(x: self.frame.origin.x, y: self.frame.origin.y, width: self.frame.width, height: self.frame.height * 0.14))
@@ -120,7 +122,6 @@ class InfoScene:SKScene {
         self.addChild(tutorialText)
         
     }
-    
     override func update(currentTime: NSTimeInterval) {
         //
     }
@@ -129,13 +130,13 @@ class InfoScene:SKScene {
             let location = touch.locationInNode(self)
             let backButton = self.childNodeWithName("backButton")
             if CGRectContainsPoint(backButton!.frame, location) {
-                var theGame = GameScene(size: self.size)
+                var theGame = GameScene(size: self.view!.bounds.size)
                 let skView = self.view as SKView!
                 skView.ignoresSiblingOrder = true
-                theGame.scaleMode = scaleMode
-                //theGame.size = skView.bounds.size
+                theGame.scaleMode = .AspectFill
+                theGame.size = skView.bounds.size
                 self.removeAllChildren()
-                skView.presentScene(theGame)
+                skView.presentScene(theGame, transition: SKTransition.crossFadeWithDuration(0.25))
             }
             
         }

@@ -6,11 +6,11 @@
 //  Copyright (c) 2015 Bubbles, Inc. All rights reserved.
 //
 
-import Foundation
+/*import Foundation
 import SpriteKit
 
 struct SaveData {
-    var highScore:Int = 0
+    var highScore:Int
     var musicIsEnabled:Bool?
     var SFXAreEnabled:Bool?
     var notificationsAreEnabled:Bool?
@@ -24,4 +24,4 @@ struct SaveData {
         
     }
     
-}
+}*/

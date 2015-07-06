@@ -34,7 +34,6 @@ class SettingsScene:SKScene {
     let musicText = SKLabelNode(fontNamed: "Futura")
     let SFXText = SKLabelNode(fontNamed: "Futura")
     let notificationsText = SKLabelNode(fontNamed: "Futura")
-    var musicOn:Bool = true
 
     override func didMoveToView(view: SKView) {
         self.scene?.backgroundColor = blue
@@ -43,7 +42,6 @@ class SettingsScene:SKScene {
         title.fontSize = 64
         title.position = CGPoint(x: self.frame.width * 0.5, y: self.frame.height * 0.725)
         self.addChild(title)
-        println(NSUserDefaults.standardUserDefaults().boolForKey("musicsIsEnabled"))
         
         copyrightNoticeLabel.fontColor = SKColor.whiteColor()
         copyrightNoticeLabel.text = "© \(NSCalendar.currentCalendar().component(NSCalendarUnit.CalendarUnitYear, fromDate: NSDate())) Bubbles, Inc."
@@ -76,6 +74,7 @@ class SettingsScene:SKScene {
         backButtonIcon.position = CGPoint(x: backButton.frame.width/2.222, y: self.frame.height * 0.9333)
         backButtonIcon.zPosition = 7
         backButtonIcon.name = "backButtonIcon"
+        backButtonIcon.setScale(0.1)
         self.addChild(backButtonIcon)
         
         let blackStrip = SKShapeNode(rect: CGRect(x: backButton.frame.width, y: self.frame.height - (self.frame.height * 0.14), width: self.frame.width * 0.75, height: self.frame.height * 0.14))
@@ -87,18 +86,22 @@ class SettingsScene:SKScene {
         
         websiteButton.position = CGPoint(x: backButton.frame.width + (backButton.frame.width * 1.5), y: self.frame.height * 0.93)
         websiteButton.zPosition = 6
+        websiteButton.setScale(0.125)
         self.addChild(websiteButton)
         
         restoreGameButton.position = CGPoint(x: (self.frame.width/2) * 0.52, y: versionLabel.position.y * 0.9)
         restoreGameButton.zPosition = 2
+        restoreGameButton.setScale(0.089)
         self.addChild(restoreGameButton)
         
         gameCenterButton.position = CGPoint(x: (self.frame.width/2) * 1.48, y: versionLabel.position.y * 0.9)
         gameCenterButton.zPosition = 2
+        gameCenterButton.setScale(0.089)
         self.addChild(gameCenterButton)
         
         removeAdsButton.position = CGPoint(x: self.frame.width/2, y: versionLabel.position.y * 0.7333)
         removeAdsButton.zPosition = 2
+        removeAdsButton.setScale(0.089)
         self.addChild(removeAdsButton)
         
         let redStrip = SKShapeNode(rect: CGRect(x: self.frame.origin.x, y: self.frame.origin.y, width: self.frame.width, height: self.frame.height * 0.14))
@@ -123,6 +126,7 @@ class SettingsScene:SKScene {
         self.addChild(restoreGameText)
         
         gameCenterText.fontColor = SKColor.whiteColor()
+        
         gameCenterText.text = "Game Center"
         gameCenterText.fontSize = 16
         gameCenterText.position = CGPoint(x: gameCenterButton.position.x, y: gameCenterButton.position.y * 0.99)
@@ -136,20 +140,9 @@ class SettingsScene:SKScene {
         removeAdsText.zPosition = removeAdsButton.zPosition + 1
         self.addChild(removeAdsText)
         
-        if musicOn == true {
-            
-            musicSwitch.texture = SKTexture(imageNamed: "switchOn")
-            
-        }
-        
-        if musicOn == false {
-            
-            musicSwitch.texture = SKTexture(imageNamed: "switchOff")
-            
-        }
-        
         musicSwitch.position = CGPoint(x: (self.frame.width/2) * 0.6, y: removeAdsButton.position.y * 0.8)
         musicSwitch.zPosition = 2
+        musicSwitch.setScale(0.1)
         self.addChild(musicSwitch)
         
         musicText.fontColor = yellow
@@ -159,20 +152,9 @@ class SettingsScene:SKScene {
         musicText.zPosition = 3
         self.addChild(musicText)
         
-        if NSUserDefaults.standardUserDefaults().boolForKey("SFXAreEnabled") == true {
-            
-            SFXSwitch.texture = SKTexture(imageNamed: "switchOn")
-            
-        }
-        
-        if NSUserDefaults.standardUserDefaults().boolForKey("SFXAreEnabled") == false {
-            
-            SFXSwitch.texture = SKTexture(imageNamed: "switchOff")
-            
-        }
-        
         SFXSwitch.position = CGPoint(x: (self.frame.width/2) * 1.4, y: removeAdsButton.position.y * 0.8)
         SFXSwitch.zPosition = 2
+        SFXSwitch.setScale(0.1)
         self.addChild(SFXSwitch)
         
         SFXText.fontColor = yellow
@@ -181,20 +163,9 @@ class SettingsScene:SKScene {
         SFXText.position = CGPoint(x: SFXSwitch.position.x, y: SFXSwitch.position.y * 0.825)
         self.addChild(SFXText)
         
-        if NSUserDefaults.standardUserDefaults().boolForKey("notificationsAreEnabled") == true {
-            
-            notificationsSwitch.texture = SKTexture(imageNamed: "switchOn")
-            
-        }
-        
-        if NSUserDefaults.standardUserDefaults().boolForKey("notificationsAreEnabled") == false {
-            
-            notificationsSwitch.texture = SKTexture(imageNamed: "switchOff")
-            
-        }
-        
         notificationsSwitch.position = CGPoint(x: self.frame.width/2, y: removeAdsButton.position.y * 0.525)
         notificationsSwitch.zPosition = 2
+        notificationsSwitch.setScale(0.1)
         self.addChild(notificationsSwitch)
         
         notificationsText.fontColor = yellow
@@ -208,32 +179,19 @@ class SettingsScene:SKScene {
     override func update(currentTime: NSTimeInterval) {
         //
         
-        println(musicOn)
-        
-        if musicOn == false {
-            
-            musicSwitch.texture = SKTexture(imageNamed: "switchOff")
-            
-        }
-        
-        if musicOn == true {
-            
-            musicSwitch.texture = SKTexture(imageNamed: "switchOn")
-            
-        }
     }
     override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
         for touch in (touches as! Set<UITouch>) {
             let location = touch.locationInNode(self)
             let backButton = self.childNodeWithName("backButton")
             if CGRectContainsPoint(backButton!.frame, location) {
-                var theGame = GameScene(size: self.size)
+                var theGame = GameScene(size: self.view!.bounds.size)
                 let skView = self.view as SKView!
                 skView.ignoresSiblingOrder = true
-                theGame.scaleMode = scaleMode
+                theGame.scaleMode = .AspectFill
                 theGame.size = skView.bounds.size
                 self.removeAllChildren()
-                skView.presentScene(theGame)
+                skView.presentScene(theGame, transition: SKTransition.crossFadeWithDuration(0.25))
             }
             
             if CGRectContainsPoint(websiteButton.frame, location) || CGRectContainsPoint(websiteText.frame, location) {
@@ -241,15 +199,6 @@ class SettingsScene:SKScene {
                 UIApplication.sharedApplication().openURL(NSURL(string:"http://stackexchange.com/")!)
                 
             }
-            
-            if CGRectContainsPoint(musicSwitch.frame, location) && musicOn == true {
-                musicOn = false
-            }
-            
-            if CGRectContainsPoint(musicSwitch.frame, location) && musicOn == false {
-                musicOn = true
-            }
-            
         }
     }
 }

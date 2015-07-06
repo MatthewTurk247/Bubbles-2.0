@@ -52,13 +52,17 @@ class GameScene: SKScene {
     let bottomRight = SKSpriteNode(imageNamed: "cornerButton")
     let settingsButton = SKSpriteNode(imageNamed: "settingsButton")
     let infoDisclosureButton = SKSpriteNode(imageNamed: "infoDisclosureButton")
+    let pauseButton = SKSpriteNode(imageNamed: "pauseButton")
     var cloudMoveAndRemove = SKAction()
     var cloudTexture = SKTexture(imageNamed: "cloud")
+    var lives:Int = 3
+    let life1 = SKSpriteNode(imageNamed: "heart")
+    let life2 = SKSpriteNode(imageNamed: "heart")
+    let life3 = SKSpriteNode(imageNamed: "heart")
     
     
     override func didMoveToView(view: SKView) {
         self.scene?.backgroundColor = blue
-        println(SaveData().SFXAreEnabled)
         func createAndMoveClouds() {
             //Cloud spawning
             let spawnACloud = SKAction.runBlock({let cloud = SKSpriteNode(imageNamed: "cloud")
@@ -93,13 +97,14 @@ class GameScene: SKScene {
         
         highScoreLabel.fontColor = yellow
         //Eventually will have the NSUserDefaults stuff here and SaveData.swift
-        highScoreLabel.text = "BEST: 58"
+        var highScore = NSUserDefaults.standardUserDefaults().integerForKey("highscore")
+        highScoreLabel.text = "BEST: \(highScore)"
         highScoreLabel.fontSize = 29
         highScoreLabel.position = CGPoint(x: self.frame.width * 0.5, y: title.position.y * 0.925)
         self.addChild(highScoreLabel)
         
         playButton.position = CGPoint(x: self.frame.width/2, y: self.frame.height * 0.45)
-        playButton.setScale(1.25)
+        playButton.setScale(1)
         self.addChild(playButton)
         
         playText.fontColor = SKColor.whiteColor()
@@ -179,6 +184,18 @@ class GameScene: SKScene {
         infoDisclosureButton.zPosition = bottomRight.zPosition + 5
         self.addChild(infoDisclosureButton)
         
+        pauseButton.position = CGPoint(x: topLeft.position.x * 0.95, y: topLeft.position.y * 1.015)
+        pauseButton.zPosition = topLeft.zPosition + 5
+        
+        life1.position = CGPoint(x: topRight.position.x * 0.95, y: topRight.position.y * 1.0388667)
+        life1.zPosition = topRight.zPosition + 5
+        
+        life2.position = CGPoint(x: life1.position.x * 1.06667, y: life1.position.y * 0.975)
+        life2.zPosition = topRight.zPosition + 5
+        
+        life3.position = CGPoint(x: life2.position.x * 1.06667, y: life2.position.y * 0.9725)
+        life3.zPosition = topRight.zPosition + 5
+        
     }
     
     
@@ -189,54 +206,62 @@ class GameScene: SKScene {
         for touch in (touches as! Set<UITouch>) {
             let location = touch.locationInNode(self)
             if CGRectContainsPoint(bottomRight.frame, location) {
-                var theInfo = InfoScene(size: self.size)
+                var theInfo = InfoScene(size: self.view!.bounds.size)
                 let skView = self.view as SKView!
                 skView.ignoresSiblingOrder = true
-                theInfo.scaleMode = scaleMode
+                theInfo.scaleMode = .AspectFill
                 theInfo.size = skView.bounds.size
                 self.removeAllChildren()
-                skView.presentScene(theInfo)
+                skView.presentScene(theInfo, transition: SKTransition.crossFadeWithDuration(0.25))
             }
             
             if CGRectContainsPoint(bottomLeft.frame, location) {
-                var theSettings = SettingsScene(size: self.size)
+                var theSettings = SettingsScene(size: self.view!.bounds.size)
                 let skView = self.view as SKView!
                 skView.ignoresSiblingOrder = true
-                theSettings.scaleMode = scaleMode
+                theSettings.scaleMode = .AspectFill
                 theSettings.size = skView.bounds.size
                 self.removeAllChildren()
-                skView.presentScene(theSettings)
+                skView.presentScene(theSettings, transition: SKTransition.crossFadeWithDuration(0.25))
             }
 
+      
+                if CGRectContainsPoint(playButton.frame, location) {
+                    var theGamePlay = GamePlayScene(size: self.view!.bounds.size)
+                    let skView = self.view as SKView!
+                    skView.ignoresSiblingOrder = true
+                    theGamePlay.scaleMode = .AspectFill
+                    theGamePlay.size = skView.bounds.size
+                    skView.presentScene(theGamePlay, transition: SKTransition.crossFadeWithDuration(0.25))
+                }
+                
             
         }
     }
-    
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
         
         timePassed++
         
         let spawnABubble = SKAction.runBlock({let bubble:SKSpriteNode = SKSpriteNode(imageNamed: "bubble")
-            let bubbleCategoryName = "bubble"
-            let bubbleCatagory:UInt64 = 0x1 << 0   //0000000000000000000000000000000000000000000000000000000000000001
+            let bubbleCategory:UInt64 = 0x1 << 0   //0000000000000000000000000000000000000000000000000000000000000001
             bubble.physicsBody = SKPhysicsBody(circleOfRadius: bubble.frame.size.width/2)
-            bubble.physicsBody?.affectedByGravity = false
             bubble.physicsBody?.mass = 1.0
             bubble.physicsBody?.friction = 0.2
             bubble.physicsBody?.restitution = 0.6
             bubble.physicsBody?.linearDamping = 0
+            bubble.physicsBody?.density = 0.5
+            bubble.physicsBody?.affectedByGravity = false
             bubble.xScale = 1
             bubble.yScale = 1
             bubble.position = CGPoint(x: self.randRange(self.frame.width * 0.35, upper: self.frame.width * 0.65), y: self.randRange(self.frame.height * 0.25, upper: self.frame.height * 0.75))
+            bubble.name = "bubble"
             let bubbleRotationAction = SKAction.rotateByAngle(CGFloat(M_PI), duration:1)
             bubble.runAction(SKAction.repeatActionForever(bubbleRotationAction))
             if self.timePassed % 500 == 0 || self.timePassed == 1 {
                 self.addChild(bubble)
-                
             }
         })
-        
         let handleBubbles = SKAction.sequence([spawnABubble])
         self.runAction(handleBubbles)
         println(timePassed)
