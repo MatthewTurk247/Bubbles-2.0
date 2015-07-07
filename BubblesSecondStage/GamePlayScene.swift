@@ -150,21 +150,7 @@ class GamePlayScene:SKScene {
         self.addChild(highScoreLabel)
         let bubble:SKSpriteNode = SKSpriteNode(imageNamed: "bubble")
         let bubbleCatagory:UInt64 = 0x1 << 0   //0000000000000000000000000000000000000000000000000000000000000001
-        bubble.physicsBody = SKPhysicsBody(circleOfRadius: bubble.frame.size.width/2)
-        bubble.physicsBody?.affectedByGravity = true
-        //bubble.physicsBody?.mass = 1.0
-        bubble.physicsBody?.friction = 0.2
-        bubble.physicsBody?.restitution = 0.6
-        bubble.physicsBody?.linearDamping = 0.0
-        bubble.physicsBody?.density = 0.5
-        bubble.xScale = 1
-        bubble.yScale = 1
-        bubble.position = CGPoint(x: self.randRange(self.frame.width * 0.35, upper: self.frame.width * 0.65), y: self.randRange(self.frame.height * 0.25, upper: self.frame.height * 0.75))
         bubble.name = "bubble"
-        let bubbleRotationAction = SKAction.rotateByAngle(CGFloat(M_PI), duration:1)
-        bubble.runAction(SKAction.repeatActionForever(bubbleRotationAction))
-        self.addChild(bubble)
-        bubble.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 0))
         pauseButton.position = CGPoint(x: topLeft.position.x * 0.85, y: topLeft.position.y * 1.02)
         pauseButton.zPosition = topLeft.zPosition + 5
         life1.position = CGPoint(x: topRight.position.x * 0.9, y: topRight.position.y * 1.045)
@@ -269,6 +255,7 @@ class GamePlayScene:SKScene {
             theGame.scaleMode = .AspectFill
             theGame.size = skView.bounds.size
             self.removeAllChildren()
+            self.removeAllActions()
             skView.presentScene(theGame, transition: SKTransition.crossFadeWithDuration(0.25))
             }
             
@@ -279,6 +266,7 @@ class GamePlayScene:SKScene {
             theGamePlay.scaleMode = .AspectFill
             theGamePlay.size = skView.bounds.size
             self.removeAllChildren()
+            self.removeAllActions()
             skView.presentScene(theGamePlay, transition: SKTransition.crossFadeWithDuration(0.25))
             }
         }
@@ -296,7 +284,22 @@ class GamePlayScene:SKScene {
         timePassed++
         println(timePassed)
         println(score)
-        title.text = "\(score)"
+//        title.text = "\(score)"
+        var elapsedTime = 0...timePassed
+        for time in elapsedTime {
+            
+            switch time {
+                
+            case 0...10: title.text = "READY"
+            case 11...20: title.text = "SET"
+            case 21: title.text = "GO"
+            case 21: title.text = ""
+            default: title.text = "\(score)"
+                
+            }
+            
+        }
+        
         let spawnABubble = SKAction.runBlock({let bubble:SKSpriteNode = SKSpriteNode(imageNamed: "bubble")
             let bubbleCategory:UInt64 = 0x1 << 0   //0000000000000000000000000000000000000000000000000000000000000001
             bubble.physicsBody = SKPhysicsBody(circleOfRadius: bubble.frame.size.width/2)
@@ -311,7 +314,7 @@ class GamePlayScene:SKScene {
             bubble.name = "bubble"
             let bubbleRotationAction = SKAction.rotateByAngle(CGFloat(M_PI), duration:1)
             bubble.runAction(SKAction.repeatActionForever(bubbleRotationAction))
-            if self.timePassed % 500 == 0 {
+            if self.timePassed % 500 == 0 || self.timePassed == 30 {
                 self.addChild(bubble)
                 bubble.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 0))
             }

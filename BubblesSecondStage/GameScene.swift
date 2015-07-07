@@ -212,6 +212,7 @@ class GameScene: SKScene {
                 theInfo.scaleMode = .AspectFill
                 theInfo.size = skView.bounds.size
                 self.removeAllChildren()
+                self.removeAllActions()
                 skView.presentScene(theInfo, transition: SKTransition.crossFadeWithDuration(0.25))
             }
             
@@ -222,6 +223,7 @@ class GameScene: SKScene {
                 theSettings.scaleMode = .AspectFill
                 theSettings.size = skView.bounds.size
                 self.removeAllChildren()
+                self.removeAllActions()
                 skView.presentScene(theSettings, transition: SKTransition.crossFadeWithDuration(0.25))
             }
 
@@ -232,6 +234,8 @@ class GameScene: SKScene {
                     skView.ignoresSiblingOrder = true
                     theGamePlay.scaleMode = .AspectFill
                     theGamePlay.size = skView.bounds.size
+                    self.removeAllChildren()
+                    self.removeAllActions()
                     skView.presentScene(theGamePlay, transition: SKTransition.crossFadeWithDuration(0.25))
                 }
                 

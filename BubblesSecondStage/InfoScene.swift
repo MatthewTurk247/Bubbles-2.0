@@ -136,6 +136,7 @@ class InfoScene:SKScene {
                 theGame.scaleMode = .AspectFill
                 theGame.size = skView.bounds.size
                 self.removeAllChildren()
+                self.removeAllActions()
                 skView.presentScene(theGame, transition: SKTransition.crossFadeWithDuration(0.25))
             }
             
