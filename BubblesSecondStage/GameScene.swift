@@ -6,6 +6,7 @@
 //  Copyright (c) 2015 Bubbles, Inc. All rights reserved.
 //
 
+import Foundation
 import SpriteKit
 
 class GameScene: SKScene {

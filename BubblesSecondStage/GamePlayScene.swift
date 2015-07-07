@@ -9,7 +9,7 @@
 import Foundation
 import SpriteKit
 
-class GamePlayScene:SKScene {
+class GamePlayScene:SKScene, SKPhysicsContactDelegate {
     
     let versionLabel:SKLabelNode = SKLabelNode(fontNamed: "Futura")
     var version:AnyObject! = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleShortVersionString")
@@ -66,9 +66,12 @@ class GamePlayScene:SKScene {
     let pauseMenuQuitText = SKLabelNode(fontNamed: "Futura")
     let pauseMenuRestartButton = SKSpriteNode(imageNamed: "pillButtonRed")
     let pauseMenuRestartText = SKLabelNode(fontNamed: "Futura")
+    let bubbleCategory:UInt32 = 0x1 << 0
+    let bottomCategory:UInt32 = 0x1 << 1
 
     override func didMoveToView(view: SKView) {
         
+        self.physicsWorld.contactDelegate = self
         self.view?.scene?.backgroundColor = blue
         title.fontColor = yellow
         title.text = "\(score)"
@@ -85,6 +88,15 @@ class GamePlayScene:SKScene {
         bottomVacuum.setScale(1.2)
         bottomVacuum.zPosition = 4
         self.addChild(bottomVacuum)
+        
+        let bottomRect = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.width, 1)
+        let bottom = SKNode()
+        bottom.physicsBody = SKPhysicsBody(edgeLoopFromRect: bottomRect)
+        
+        self.addChild(bottom)
+        
+        bottom.physicsBody?.categoryBitMask = bottomCategory
+        
         
         let worldBorder = SKPhysicsBody(edgeLoopFromRect: self.frame)
         self.physicsBody = worldBorder
@@ -272,19 +284,56 @@ class GamePlayScene:SKScene {
         }
     }
     
+    func didBeginContact(contact: SKPhysicsContact) {
+        var firstBody = SKPhysicsBody()
+        var secondBody = SKPhysicsBody()
+        
+        if contact.bodyA.categoryBitMask < contact.bodyB.categoryBitMask {
+            firstBody = contact.bodyA
+            secondBody = contact.bodyB
+        } else {
+            firstBody = contact.bodyB
+            secondBody = contact.bodyA
+        }
+        
+        let bubble:SKSpriteNode = SKSpriteNode(imageNamed: "bubble")
+        bubble.physicsBody = SKPhysicsBody(circleOfRadius: bubble.frame.size.width/2)
+        bubble.physicsBody?.friction = 0.2
+        bubble.physicsBody?.restitution = 0.6
+        bubble.physicsBody?.linearDamping = 0.0
+        bubble.physicsBody?.affectedByGravity = true
+        bubble.xScale = 1
+        bubble.yScale = 1
+        bubble.position = CGPoint(x: self.randRange(self.frame.width * 0.35, upper: self.frame.width * 0.65), y: self.randRange(self.frame.height * 0.25, upper: self.frame.height * 0.75))
+        bubble.name = "bubble"
+        let bubbleRotationAction = SKAction.rotateByAngle(CGFloat(M_PI), duration:1)
+        bubble.runAction(SKAction.repeatActionForever(bubbleRotationAction))
+        bubble.physicsBody?.categoryBitMask = self.bubbleCategory
+        bubble.physicsBody?.contactTestBitMask = self.bottomCategory
+        
+        if firstBody.categoryBitMask == bubbleCategory && secondBody.categoryBitMask == bottomCategory {
+            
+            firstBody.node?.removeFromParent()
+            //self.addChild(bubble)
+            //bubble.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 0))
+            
+        }
+        
+    }
+
+    
     override func update(currentTime: NSTimeInterval) {
         if score > NSUserDefaults.standardUserDefaults().integerForKey("highscore") {
             //Do anything here when the user has a new highscore
             NSUserDefaults.standardUserDefaults().setInteger(score, forKey: "highscore")
             NSUserDefaults.standardUserDefaults().synchronize()
-            highScoreLabel.text = "BEST: \(score)"
+            highScoreLabel.text = "NEW BEST"
             highScoreLabel.fontColor = red
             title.fontColor = red
         }
         timePassed++
         println(timePassed)
-        println(score)
-//        title.text = "\(score)"
+        println(lives)
         var elapsedTime = 0...timePassed
         for time in elapsedTime {
             
@@ -293,7 +342,7 @@ class GamePlayScene:SKScene {
             case 0...10: title.text = "READY"
             case 11...20: title.text = "SET"
             case 21: title.text = "GO"
-            case 21: title.text = ""
+            case 22...27: title.text = ""
             default: title.text = "\(score)"
                 
             }
@@ -301,7 +350,6 @@ class GamePlayScene:SKScene {
         }
         
         let spawnABubble = SKAction.runBlock({let bubble:SKSpriteNode = SKSpriteNode(imageNamed: "bubble")
-            let bubbleCategory:UInt64 = 0x1 << 0   //0000000000000000000000000000000000000000000000000000000000000001
             bubble.physicsBody = SKPhysicsBody(circleOfRadius: bubble.frame.size.width/2)
             //bubble.physicsBody?.mass = 1.0
             bubble.physicsBody?.friction = 0.2
@@ -314,6 +362,8 @@ class GamePlayScene:SKScene {
             bubble.name = "bubble"
             let bubbleRotationAction = SKAction.rotateByAngle(CGFloat(M_PI), duration:1)
             bubble.runAction(SKAction.repeatActionForever(bubbleRotationAction))
+            bubble.physicsBody?.categoryBitMask = self.bubbleCategory
+            bubble.physicsBody?.contactTestBitMask = self.bottomCategory
             if self.timePassed % 500 == 0 || self.timePassed == 30 {
                 self.addChild(bubble)
                 bubble.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 0))
