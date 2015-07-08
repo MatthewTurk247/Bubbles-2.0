@@ -9,7 +9,6 @@
 import UIKit
 import SpriteKit
 import GameKit
-import GoogleMobileAds
 
 extension SKNode {
     class func unarchiveFromFile(file : String) -> SKNode? {
@@ -28,8 +27,6 @@ extension SKNode {
 }
 
 class GameViewController: UIViewController {
-    
-    var googleBannerView:GADBannerView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,13 +45,6 @@ class GameViewController: UIViewController {
             skView.presentScene(scene)
         }
         
-        googleBannerView = GADBannerView(adSize: kGADAdSizeSmartBannerPortrait)
-        googleBannerView.adUnitID = "ca-app-pub-3940256099942544/2934735716"
-        googleBannerView.rootViewController = self
-        var request:GADRequest = GADRequest()
-        googleBannerView.loadRequest(request)
-        googleBannerView.frame = CGRectMake(view.bounds.origin.x, view.bounds.height - googleBannerView.frame.size.height, googleBannerView.frame.size.width, googleBannerView.frame.size.height)
-        self.view.addSubview(googleBannerView!)
     }
 
     override func shouldAutorotate() -> Bool {

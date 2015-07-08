@@ -8,9 +8,10 @@
 
 import Foundation
 import SpriteKit
+import GoogleMobileAds
 
 class GameScene: SKScene {
-    
+
     var language = NSBundle.mainBundle().preferredLocalizations.first as! NSString
     let versionLabel:SKLabelNode = SKLabelNode(fontNamed: "Futura")
     var version:AnyObject! = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleShortVersionString")
@@ -66,6 +67,7 @@ class GameScene: SKScene {
     override func didMoveToView(view: SKView) {
         println(language)
         self.scene?.backgroundColor = blue
+        
         func createAndMoveClouds() {
             //Cloud spawning
             let spawnACloud = SKAction.runBlock({let cloud = SKSpriteNode(imageNamed: "cloud")
