@@ -8,6 +8,7 @@
 
 import SpriteKit
 import Foundation
+import AVFoundation
 
 class InfoScene:SKScene {
     let title:SKLabelNode = SKLabelNode(fontNamed: "Futura")

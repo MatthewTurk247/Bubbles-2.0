@@ -11,6 +11,7 @@ import SpriteKit
 
 class GameScene: SKScene {
     
+    var language = NSBundle.mainBundle().preferredLocalizations.first as! NSString
     let versionLabel:SKLabelNode = SKLabelNode(fontNamed: "Futura")
     var version:AnyObject! = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleShortVersionString")
     func randRange (lower: CGFloat, upper: CGFloat) -> CGFloat {
@@ -63,6 +64,7 @@ class GameScene: SKScene {
     
     
     override func didMoveToView(view: SKView) {
+        println(language)
         self.scene?.backgroundColor = blue
         func createAndMoveClouds() {
             //Cloud spawning

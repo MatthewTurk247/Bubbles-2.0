@@ -16,6 +16,7 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
     func randRange (lower: CGFloat, upper: CGFloat) -> CGFloat {
         return lower + CGFloat(arc4random_uniform(UInt32(upper - lower + 1)))
     }
+    var isGameOver = false
     let title:SKLabelNode = SKLabelNode(fontNamed: "Futura")
     let highScoreLabel:SKLabelNode = SKLabelNode(fontNamed: "Futura")
     let playText:SKLabelNode = SKLabelNode(fontNamed: "Futura")
@@ -66,8 +67,10 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
     let pauseMenuQuitText = SKLabelNode(fontNamed: "Futura")
     let pauseMenuRestartButton = SKSpriteNode(imageNamed: "pillButtonRed")
     let pauseMenuRestartText = SKLabelNode(fontNamed: "Futura")
+    //let gameOver
     let bubbleCategory:UInt32 = 0x1 << 0
     let bottomCategory:UInt32 = 0x1 << 1
+    let adBackground = SKSpriteNode(imageNamed: "adBackground")
 
     override func didMoveToView(view: SKView) {
         
@@ -160,6 +163,7 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
         highScoreLabel.fontSize = 29
         highScoreLabel.position = CGPoint(x: self.frame.width * 0.5, y: title.position.y * 0.925)
         self.addChild(highScoreLabel)
+        
         let bubble:SKSpriteNode = SKSpriteNode(imageNamed: "bubble")
         let bubbleCatagory:UInt64 = 0x1 << 0   //0000000000000000000000000000000000000000000000000000000000000001
         bubble.name = "bubble"
@@ -201,6 +205,31 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
 
     }
     
+    func gameOver() {
+        
+        isGamePaused = true
+        self.paused = true
+        let tintScreenRect = CGRect(x: self.frame.origin.x, y: self.frame.origin.y, width: self.frame.width, height: self.frame.height)
+        let tintScreen = SKShapeNode(rect: tintScreenRect)
+        tintScreen.strokeColor = SKColor(red: 0/255, green: 0/255, blue: 0/255, alpha: 0.25)
+        tintScreen.fillColor = SKColor(red: 0/255, green: 0/255, blue: 0/255, alpha: 0.25)
+        tintScreen.zPosition = 2
+        tintScreen.name = "tintScreen"
+        self.addChild(tintScreen)
+        
+        let adBackground = SKSpriteNode(imageNamed: "adBackground")
+        adBackground.position = CGPoint(x: self.frame.width/2, y: self.frame.height * 0.4)
+        adBackground.setScale(1.0)
+        adBackground.zPosition = 4
+        self.addChild(adBackground)
+        title.zPosition = 3
+        highScoreLabel.zPosition = 3
+        var highScore = NSUserDefaults.standardUserDefaults().integerForKey("highscore")
+        pauseButton.removeFromParent()
+
+        
+    }
+    
     func pauseGame() {
         
         isGamePaused = true
@@ -236,6 +265,10 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
         var highScore = NSUserDefaults.standardUserDefaults().integerForKey("highscore")
         highScoreLabel.text = "BEST: \(highScore)"
         pauseButton.texture = SKTexture(imageNamed: "pauseButton")
+        pauseMenuQuitButton.removeFromParent()
+        pauseMenuQuitText.removeFromParent()
+        pauseMenuRestartButton.removeFromParent()
+        pauseMenuRestartText.removeFromParent()
         //Removed Pause Menu
     }
     
@@ -314,6 +347,27 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
         if firstBody.categoryBitMask == bubbleCategory && secondBody.categoryBitMask == bottomCategory {
             
             firstBody.node?.removeFromParent()
+            lives--
+            if lives < 3 {
+                
+                life1.removeFromParent()
+
+            }
+            
+            if lives < 2 {
+                
+                life2.removeFromParent()
+                
+            }
+            
+            if lives < 1 {
+                
+                life3.removeFromParent()
+                isGameOver = true
+                gameOver()
+                //game is over at this point
+                
+            }
             //self.addChild(bubble)
             //bubble.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 0))
             
@@ -321,6 +375,9 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
         
     }
 
+    func didEndContact(contact: SKPhysicsContact) {
+        
+    }
     
     override func update(currentTime: NSTimeInterval) {
         if score > NSUserDefaults.standardUserDefaults().integerForKey("highscore") {
@@ -331,9 +388,11 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
             highScoreLabel.fontColor = red
             title.fontColor = red
         }
+        
         timePassed++
         println(timePassed)
-        println(lives)
+        println("LIVES!!! \(lives)")
+        println("HIGH SCORE LABEL: \(highScoreLabel.text)")
         var elapsedTime = 0...timePassed
         for time in elapsedTime {
             
@@ -346,6 +405,14 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
             default: title.text = "\(score)"
                 
             }
+            
+        }
+        
+        if self.isGameOver == true {
+            
+            var highScore = NSUserDefaults.standardUserDefaults().integerForKey("highscore")
+            title.text = "LOOSER"
+            highScoreLabel.text = "SCORE: \(score)   BEST: \(highScore)"
             
         }
         
