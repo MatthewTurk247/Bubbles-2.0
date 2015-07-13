@@ -39,14 +39,14 @@ class InfoScene:SKScene {
         
         copyrightNoticeLabel.fontColor = SKColor.whiteColor()
         copyrightNoticeLabel.text = "© \(NSCalendar.currentCalendar().component(NSCalendarUnit.CalendarUnitYear, fromDate: NSDate())) Bubbles, Inc."
-        copyrightNoticeLabel.fontSize = 24
+        copyrightNoticeLabel.fontSize = 18
         copyrightNoticeLabel.position = CGPoint(x: self.frame.width/2, y: self.frame.height * 0.08)
         copyrightNoticeLabel.zPosition = 7
         self.addChild(copyrightNoticeLabel)
         
         moreInfoLabel.fontColor = SKColor.whiteColor()
         moreInfoLabel.text = "For More Info Visit Bubbles.com"
-        moreInfoLabel.fontSize = 24
+        moreInfoLabel.fontSize = 18
         moreInfoLabel.position = CGPoint(x: self.frame.width/2, y: self.frame.height * 0.025)
         moreInfoLabel.zPosition = 7
         self.addChild(moreInfoLabel)
@@ -59,25 +59,25 @@ class InfoScene:SKScene {
         
         leadDeveloperLabel.fontColor = SKColor.whiteColor()
         leadDeveloperLabel.text = "Lead Developer: Matthew Turk"
-        leadDeveloperLabel.fontSize = 24
+        leadDeveloperLabel.fontSize = 20
         leadDeveloperLabel.position = CGPoint(x: self.frame.width/2, y: versionLabel.position.y * 0.9)
         self.addChild(leadDeveloperLabel)
         
         gameDesignerLabel.fontColor = SKColor.whiteColor()
         gameDesignerLabel.text = "Game Designer: Matthew Turk"
-        gameDesignerLabel.fontSize = 24
+        gameDesignerLabel.fontSize = 20
         gameDesignerLabel.position = CGPoint(x: self.frame.width/2, y: versionLabel.position.y * 0.75)
         self.addChild(gameDesignerLabel)
         
         marketingAmpersandPRLabel.fontColor = SKColor.whiteColor()
         marketingAmpersandPRLabel.text = "Marketing & PR: First Last"
-        marketingAmpersandPRLabel.fontSize = 24
+        marketingAmpersandPRLabel.fontSize = 20
         marketingAmpersandPRLabel.position = CGPoint(x: self.frame.width/2, y: versionLabel.position.y * 0.6)
         self.addChild(marketingAmpersandPRLabel)
         
         financeAmpersandLaw.fontColor = SKColor.whiteColor()
         financeAmpersandLaw.text = "Finance & Law: First Last"
-        financeAmpersandLaw.fontSize = 24
+        financeAmpersandLaw.fontSize = 20
         financeAmpersandLaw.position = CGPoint(x: self.frame.width/2, y: versionLabel.position.y * 0.45)
         self.addChild(financeAmpersandLaw)
         

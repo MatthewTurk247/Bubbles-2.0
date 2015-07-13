@@ -28,14 +28,18 @@ class SettingsScene:SKScene {
     let gameCenterText = SKLabelNode(fontNamed: "Futura")
     let removeAdsButton = SKSpriteNode(imageNamed: "pillButtonRed")
     let removeAdsText = SKLabelNode(fontNamed: "Futura")
-    let musicSwitch = SKSpriteNode(imageNamed: "switchOn")
-    let SFXSwitch = SKSpriteNode(imageNamed: "switchOn")
-    let notificationsSwitch = SKSpriteNode(imageNamed: "switchOff")
+    let musicSwitch = SKSpriteNode(imageNamed: "switchOff")
+    let SFXSwitch = SKSpriteNode(imageNamed: "switchOff")
+    let notificationsSwitch = SKSpriteNode(imageNamed: "switchOn")
     let musicText = SKLabelNode(fontNamed: "Futura")
     let SFXText = SKLabelNode(fontNamed: "Futura")
     let notificationsText = SKLabelNode(fontNamed: "Futura")
+    var musicIsEnabled:Bool? = NSUserDefaults.standardUserDefaults().boolForKey("music")
+    var SFXAreEnabled:Bool? = NSUserDefaults.standardUserDefaults().boolForKey("SFX")
+    var notificationsAreEnabled:Bool? = NSUserDefaults.standardUserDefaults().boolForKey("notifs")
 
     override func didMoveToView(view: SKView) {
+        
         self.scene?.backgroundColor = blue
         title.fontColor = yellow
         title.text = "BUBBLES"
@@ -45,14 +49,14 @@ class SettingsScene:SKScene {
         
         copyrightNoticeLabel.fontColor = SKColor.whiteColor()
         copyrightNoticeLabel.text = "© \(NSCalendar.currentCalendar().component(NSCalendarUnit.CalendarUnitYear, fromDate: NSDate())) Bubbles, Inc."
-        copyrightNoticeLabel.fontSize = 24
+        copyrightNoticeLabel.fontSize = 18
         copyrightNoticeLabel.position = CGPoint(x: self.frame.width/2, y: self.frame.height * 0.08)
         copyrightNoticeLabel.zPosition = 7
         self.addChild(copyrightNoticeLabel)
         
         moreInfoLabel.fontColor = SKColor.whiteColor()
         moreInfoLabel.text = "For More Info Visit Bubbles.com"
-        moreInfoLabel.fontSize = 24
+        moreInfoLabel.fontSize = 18
         moreInfoLabel.position = CGPoint(x: self.frame.width/2, y: self.frame.height * 0.025)
         moreInfoLabel.zPosition = 7
         self.addChild(moreInfoLabel)
@@ -148,7 +152,7 @@ class SettingsScene:SKScene {
         musicText.fontColor = yellow
         musicText.text = "Music"
         musicText.fontSize = 20
-        musicText.position = CGPoint(x: musicSwitch.position.x, y: musicSwitch.position.y * 0.825)
+        musicText.position = CGPoint(x: musicSwitch.position.x, y: musicSwitch.position.y * 0.8)
         musicText.zPosition = 3
         self.addChild(musicText)
         
@@ -160,7 +164,7 @@ class SettingsScene:SKScene {
         SFXText.fontColor = yellow
         SFXText.text = "SFX"
         SFXText.fontSize = 20
-        SFXText.position = CGPoint(x: SFXSwitch.position.x, y: SFXSwitch.position.y * 0.825)
+        SFXText.position = CGPoint(x: SFXSwitch.position.x, y: SFXSwitch.position.y * 0.8)
         self.addChild(SFXText)
         
         notificationsSwitch.position = CGPoint(x: self.frame.width/2, y: removeAdsButton.position.y * 0.525)
@@ -171,14 +175,14 @@ class SettingsScene:SKScene {
         notificationsText.fontColor = yellow
         notificationsText.text = "Notifications"
         notificationsText.fontSize = 20
-        notificationsText.position = CGPoint(x: notificationsSwitch.position.x, y: notificationsSwitch.position.y * 0.725)
+        notificationsText.position = CGPoint(x: notificationsSwitch.position.x, y: notificationsSwitch.position.y * 0.7)
+        
         self.addChild(notificationsText)
         
     }
     
     override func update(currentTime: NSTimeInterval) {
         //
-        
     }
     override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
         for touch in (touches as! Set<UITouch>) {

@@ -81,7 +81,6 @@
 		EB57A3C41B312B8E00BCD176 = {
 			isa = PBXGroup;
 			children = (
-				EB5CADE01B4DBBBB00437B73 /* iAd.framework */,
 				EB57A3CF1B312B8F00BCD176 /* BubblesSecondStage */,
 				EB57A3E91B312B8F00BCD176 /* BubblesSecondStageTests */,
 				EB57A3CE1B312B8F00BCD176 /* Products */,
@@ -100,6 +99,7 @@
 		EB57A3CF1B312B8F00BCD176 /* BubblesSecondStage */ = {
 			isa = PBXGroup;
 			children = (
+				EB5CADE01B4DBBBB00437B73 /* iAd.framework */,
 				EBCF357A1B4C426200C6A8DB /* GameKit.framework */,
 				EB57A3D21B312B8F00BCD176 /* AppDelegate.swift */,
 				EB57A3D41B312B8F00BCD176 /* GameScene.sks */,

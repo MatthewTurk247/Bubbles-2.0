@@ -8,7 +8,6 @@
 
 import Foundation
 import SpriteKit
-import GoogleMobileAds
 
 class GameScene: SKScene {
 
@@ -63,8 +62,8 @@ class GameScene: SKScene {
     let life2 = SKSpriteNode(imageNamed: "heart")
     let life3 = SKSpriteNode(imageNamed: "heart")
     
-    
     override func didMoveToView(view: SKView) {
+        println(UIScreen.mainScreen().bounds)
         println(language)
         self.scene?.backgroundColor = blue
         
@@ -133,7 +132,7 @@ class GameScene: SKScene {
         topLeft.position = CGPoint(x: (self.frame.width * 0.5) - topLeft.frame.width, y: self.frame.height - (topLeft.frame.height/2.1))
         topLeft.setScale(1.2)
         topLeft.zPosition = topVacuum.zPosition - 1
-        if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
+        if UIDevice.currentDevice().userInterfaceIdiom == .Pad || UIScreen.mainScreen().bounds == CGRectMake(0.0, 0.0, 320.0, 480.0) {
             topLeft.xScale = 2.4
         } else {
             
@@ -146,7 +145,8 @@ class GameScene: SKScene {
         topRight.position = CGPoint(x: (self.frame.width * 0.5) + topRight.frame.width, y: topLeft.position.y)
         topRight.setScale(1.2)
         topRight.zPosition = topVacuum.zPosition - 1
-        if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
+        println(UIScreen.mainScreen().bounds)
+        if UIDevice.currentDevice().userInterfaceIdiom == .Pad || UIScreen.mainScreen().bounds == CGRectMake(0.0, 0.0, 320.0, 480.0) {
             topRight.xScale = 2.4
         } else {
             
@@ -159,7 +159,7 @@ class GameScene: SKScene {
         bottomLeft.position = CGPoint(x: topLeft.position.x, y: bottomLeft.frame.height/2.1)
         bottomLeft.setScale(1.2)
         bottomLeft.zPosition = topVacuum.zPosition - 1
-        if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
+        if UIDevice.currentDevice().userInterfaceIdiom == .Pad || UIScreen.mainScreen().bounds == CGRectMake(0.0, 0.0, 320.0, 480.0) {
             bottomLeft.xScale = 2.4
         } else {
             
@@ -172,7 +172,7 @@ class GameScene: SKScene {
         bottomRight.position = CGPoint(x: topRight.position.x, y: bottomLeft.position.y)
         bottomRight.setScale(1.2)
         bottomRight.zPosition = topVacuum.zPosition - 1
-        if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
+        if UIDevice.currentDevice().userInterfaceIdiom == .Pad || UIScreen.mainScreen().bounds == CGRectMake(0.0, 0.0, 320.0, 480.0) {
             bottomRight.xScale = 2.4
         } else {
             

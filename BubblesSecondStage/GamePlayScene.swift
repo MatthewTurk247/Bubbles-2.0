@@ -8,6 +8,8 @@
 
 import Foundation
 import SpriteKit
+import iAd
+import GameKit
 
 class GamePlayScene:SKScene, SKPhysicsContactDelegate {
     
@@ -347,7 +349,7 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
         if firstBody.categoryBitMask == bubbleCategory && secondBody.categoryBitMask == bottomCategory {
             
             firstBody.node?.removeFromParent()
-            lives--
+            --lives
             if lives < 3 {
                 
                 life1.removeFromParent()
