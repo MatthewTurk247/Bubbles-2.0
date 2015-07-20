@@ -27,6 +27,29 @@ class InfoScene:SKScene {
     let moreInfoLabel = SKLabelNode(fontNamed: "Futura")
     let tutorialButton = SKSpriteNode(imageNamed: "pillButtonGreen")
     let tutorialText = SKLabelNode(fontNamed: "Futura")
+    let tutorialVideo = SKVideoNode(videoFileNamed: "bubblesTutorialVid.mov")
+    let closeButton = SKSpriteNode(imageNamed: "close")
+    func watchTutorial() {
+        closeButton.position = CGPoint(x: self.frame.width * 0.1, y: self.frame.height * 0.94)
+        closeButton.zPosition = 11
+        closeButton.name = "backButtonIcon"
+        closeButton.setScale(1.0)
+        self.addChild(closeButton)
+        tutorialVideo.position = CGPoint(x: self.frame.width/2, y: self.frame.height/2)
+        tutorialVideo.size = self.size
+        println("About to play")
+        tutorialVideo.zPosition = 10
+        tutorialVideo.alpha = 0.0
+        self.addChild(tutorialVideo)
+        tutorialVideo.runAction(SKAction.fadeAlphaTo(1.0, duration: 0.5))
+        tutorialVideo.play()
+    }
+    func closeTutorial() {
+        closeButton.removeFromParent()
+        tutorialVideo.pause()
+        tutorialVideo.runAction(SKAction.fadeAlphaTo(0.0, duration: 0.5))
+        tutorialVideo.removeFromParent()
+    }
     
     override func didMoveToView(view: SKView) {
         self.scene?.backgroundColor = blue
@@ -140,7 +163,20 @@ class InfoScene:SKScene {
                 self.removeAllActions()
                 skView.presentScene(theGame, transition: SKTransition.crossFadeWithDuration(0.25))
             }
-            
+            if CGRectContainsPoint(tutorialButton.frame, location) {
+                watchTutorial()
+            }
+            if CGRectContainsPoint(closeButton.frame, location) {
+                closeTutorial()
+                var theInfo = InfoScene(size: self.view!.bounds.size)
+                let skView = self.view as SKView!
+                skView.ignoresSiblingOrder = true
+                theInfo.scaleMode = .AspectFill
+                theInfo.size = skView.bounds.size
+                self.removeAllChildren()
+                self.removeAllActions()
+                skView.presentScene(theInfo, transition: SKTransition.crossFadeWithDuration(0.25))
+            }
         }
     }
 }

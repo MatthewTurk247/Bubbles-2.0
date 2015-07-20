@@ -11,7 +11,7 @@ import Foundation
 import GameKit
 import UIKit
 
-class SettingsScene:SKScene {
+class SettingsScene:SKScene, UINavigationControllerDelegate {
     let title:SKLabelNode = SKLabelNode(fontNamed: "Futura")
     let blue = SKColor(red: 29.0/255, green: 141.0/255, blue: 180.0/255, alpha: 1.0)
     let black = SKColor(red: 80.0/255, green: 80.0/255, blue: 80.0/255, alpha: 1.0)
@@ -212,7 +212,12 @@ class SettingsScene:SKScene {
                     var vc = self.view?.window?.rootViewController
                     var gc = GKGameCenterViewController()
                     vc?.presentViewController(gc, animated: true, completion: nil)
-                    
+                    //gc.delegate = self.view?.window?.rootViewController?.navigationController?.delegate
+                    //gc.delegate = self
+                    func gameCenterViewControllerDidFinish(gameCenterViewController: GKGameCenterViewController!) {
+                        gameCenterViewController.dismissViewControllerAnimated(true, completion: nil)
+                        
+                    }
                 }
                 func saveHighscoreToLeaderboard(score:Int) {
                     
