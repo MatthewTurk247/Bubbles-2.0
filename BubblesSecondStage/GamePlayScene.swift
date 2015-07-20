@@ -390,6 +390,28 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
             highScoreLabel.fontColor = red
             title.fontColor = red
         }
+        func saveHighscoreToLeaderboard(score_:Int) {
+            
+            //check if user is signed in
+            if GKLocalPlayer.localPlayer().authenticated {
+                
+                var scoreReporter = GKScore(leaderboardIdentifier: "bubblesgameleaderbooard2015") //leaderboard id here
+                
+                scoreReporter.value = Int64(score_) //score variable here (same as above)
+                
+                var scoreArray: [GKScore] = [scoreReporter]
+                
+                GKScore.reportScores(scoreArray, withCompletionHandler: {(error : NSError!) -> Void in
+                    if error != nil {
+                        println("error")
+                    }
+                })
+                
+            }
+            
+        }
+        
+        saveHighscoreToLeaderboard(NSUserDefaults.standardUserDefaults().integerForKey("highscore"))
         
         timePassed++
         println(timePassed)

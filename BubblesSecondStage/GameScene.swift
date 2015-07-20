@@ -8,6 +8,7 @@
 
 import Foundation
 import SpriteKit
+import GameKit
 
 class GameScene: SKScene {
 
@@ -250,9 +251,8 @@ class GameScene: SKScene {
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
         
-        timePassed++
-        
-        let spawnABubble = SKAction.runBlock({let bubble:SKSpriteNode = SKSpriteNode(imageNamed: "bubble")
+            timePassed++
+            let spawnABubble = SKAction.runBlock({let bubble:SKSpriteNode = SKSpriteNode(imageNamed: "bubble")
             let bubbleCategory:UInt64 = 0x1 << 0   //0000000000000000000000000000000000000000000000000000000000000001
             bubble.physicsBody = SKPhysicsBody(circleOfRadius: bubble.frame.size.width/2)
             bubble.physicsBody?.mass = 1.0

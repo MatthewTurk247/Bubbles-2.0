@@ -8,6 +8,8 @@
 
 import SpriteKit
 import Foundation
+import GameKit
+import UIKit
 
 class SettingsScene:SKScene {
     let title:SKLabelNode = SKLabelNode(fontNamed: "Futura")
@@ -40,6 +42,7 @@ class SettingsScene:SKScene {
 
     override func didMoveToView(view: SKView) {
         
+        println(NSUserDefaults.standardUserDefaults().integerForKey("highscore"))
         self.scene?.backgroundColor = blue
         title.fontColor = yellow
         title.text = "BUBBLES"
@@ -203,6 +206,36 @@ class SettingsScene:SKScene {
                 
                 UIApplication.sharedApplication().openURL(NSURL(string:"http://stackexchange.com/")!)
                 
+            }
+            if CGRectContainsPoint(gameCenterButton.frame, location) || CGRectContainsPoint(gameCenterText.frame, location) {
+                func showLeader() {
+                    var vc = self.view?.window?.rootViewController
+                    var gc = GKGameCenterViewController()
+                    vc?.presentViewController(gc, animated: true, completion: nil)
+                    
+                }
+                func saveHighscoreToLeaderboard(score:Int) {
+                    
+                    //check if user is signed in
+                    if GKLocalPlayer.localPlayer().authenticated {
+                        
+                        var scoreReporter = GKScore(leaderboardIdentifier: "bubblesgameleaderboard2015") //leaderboard id here
+                        
+                        scoreReporter.value = Int64(score) //score variable here (same as above)
+                        
+                        var scoreArray: [GKScore] = [scoreReporter]
+                        GKScore.reportScores(scoreArray, withCompletionHandler: {(error : NSError!) -> Void in
+                            if error != nil {
+                                println("error")
+                            }
+                        })
+                        
+                    }
+                    
+                }
+                println(NSUserDefaults.standardUserDefaults().integerForKey("highscore"))
+                saveHighscoreToLeaderboard(NSUserDefaults.standardUserDefaults().integerForKey("highscore"))
+                showLeader()
             }
         }
     }

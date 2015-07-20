@@ -27,7 +27,7 @@ extension SKNode {
 }
 
 class GameViewController: UIViewController {
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         if let scene = GameScene.unarchiveFromFile("GameScene") as? GameScene {
@@ -43,14 +43,24 @@ class GameViewController: UIViewController {
             scene.scaleMode = .AspectFill
             
             skView.presentScene(scene)
+            func authenticateLocalPlayer(){
+                
+                var localPlayer = GKLocalPlayer.localPlayer()
+                
+                localPlayer.authenticateHandler = {(ViewController:UIViewController!, error:NSError!) -> Void in
+                    println(GKLocalPlayer.localPlayer().authenticated)
+                }
+                
+            }
+            authenticateLocalPlayer()
         }
         
     }
-
+    
     override func shouldAutorotate() -> Bool {
         return true
     }
-
+    
     override func supportedInterfaceOrientations() -> Int {
         if UIDevice.currentDevice().userInterfaceIdiom == .Phone {
             return Int(UIInterfaceOrientationMask.Portrait.rawValue)
@@ -58,12 +68,12 @@ class GameViewController: UIViewController {
             return Int(UIInterfaceOrientationMask.Portrait.rawValue)
         }
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Release any cached data, images, etc that aren't in use.
     }
-
+    
     override func prefersStatusBarHidden() -> Bool {
         return true
     }
