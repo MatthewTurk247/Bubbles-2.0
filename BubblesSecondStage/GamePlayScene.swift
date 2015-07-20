@@ -73,9 +73,13 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
     let bubbleCategory:UInt32 = 0x1 << 0
     let bottomCategory:UInt32 = 0x1 << 1
     let adBackground = SKSpriteNode(imageNamed: "adBackground")
+    var isAntiGravity:Bool = false
+    var adTextures = [SKTexture(imageNamed: ""), SKTexture(imageNamed: ""), SKTexture(imageNamed: ""), SKTexture(imageNamed: ""), SKTexture(imageNamed: ""), SKTexture(imageNamed: "")]
 
     override func didMoveToView(view: SKView) {
         
+        println(isAntiGravity)
+        self.physicsWorld.gravity = CGVector(dx: 0, dy: -3.333)
         self.physicsWorld.contactDelegate = self
         self.view?.scene?.backgroundColor = blue
         title.fontColor = yellow
@@ -83,6 +87,11 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
         title.fontSize = 64
         title.position = CGPoint(x: self.frame.width * 0.5, y: self.frame.height * 0.725)
         self.addChild(title)
+        
+        pauseMenuQuitButton.zPosition = -1
+        pauseMenuQuitText.zPosition = -1
+        pauseMenuRestartButton.zPosition = -1
+        pauseMenuRestartText.zPosition = -1
         
         topVacuum.position = CGPoint(x: self.frame.width * 0.5, y: self.frame.height - 0.5 * (topVacuum.frame.height))
         topVacuum.setScale(1.2)
@@ -197,13 +206,11 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
         pauseMenuQuitText.text = "Quit"
         pauseMenuQuitText.fontSize = 16
         pauseMenuQuitText.position = CGPoint(x: pauseMenuQuitButton.position.x, y: pauseMenuQuitButton.position.y * 0.99)
-        pauseMenuQuitText.zPosition = pauseMenuQuitButton.zPosition + 1
         
         pauseMenuRestartText.fontColor = SKColor.whiteColor()
         pauseMenuRestartText.text = "Restart"
         pauseMenuRestartText.fontSize = 16
         pauseMenuRestartText.position = CGPoint(x: pauseMenuRestartButton.position.x, y: pauseMenuRestartButton.position.y * 0.99)
-        pauseMenuRestartText.zPosition = pauseMenuRestartButton.zPosition + 1
 
     }
     
@@ -249,6 +256,10 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
         highScoreLabel.text = "PAUSED"
         pauseButton.texture = SKTexture(imageNamed: "resumeButton")
         pauseButton.setScale(0.9)
+        pauseMenuQuitButton.zPosition = 3
+        pauseMenuQuitText.zPosition = 3
+        pauseMenuRestartButton.zPosition = 3
+        pauseMenuRestartText.zPosition = 3
         self.addChild(pauseMenuQuitButton)
         self.addChild(pauseMenuQuitText)
         self.addChild(pauseMenuRestartButton)
@@ -267,6 +278,10 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
         var highScore = NSUserDefaults.standardUserDefaults().integerForKey("highscore")
         highScoreLabel.text = "BEST: \(highScore)"
         pauseButton.texture = SKTexture(imageNamed: "pauseButton")
+        pauseMenuQuitButton.zPosition = 1
+        pauseMenuQuitText.zPosition = 1
+        pauseMenuRestartButton.zPosition = 1
+        pauseMenuRestartText.zPosition = 1
         pauseMenuQuitButton.removeFromParent()
         pauseMenuQuitText.removeFromParent()
         pauseMenuRestartButton.removeFromParent()
@@ -278,10 +293,11 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
         for touch in (touches as! Set<UITouch>) {
             let location = touch.locationInNode(self)
             var node = self.nodeAtPoint(location)
-            if self.nodeAtPoint(location).name == "bubble" {
+            if self.nodeAtPoint(location).name == "bubble" && isAntiGravity == false {
+
                 
+                self.nodeAtPoint(location).physicsBody?.applyImpulse(CGVectorMake(randRange(-50, upper: 50), randRange(500, upper: 650)))
                 println("TOUCHED")
-                self.nodeAtPoint(location).physicsBody?.applyImpulse(CGVectorMake(randRange(-5, upper: 5), randRange(self.nodeAtPoint(location).position.y + 5, upper: 25)))
                 score++
                 
             } else {
@@ -289,33 +305,71 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
                 println("MISSED")
             
             }
-
+            
+            println(isAntiGravity)
+            
+            if self.nodeAtPoint(location).name == "bubble" && isAntiGravity == true {
+                
+                
+                self.nodeAtPoint(location).physicsBody?.applyImpulse(CGVectorMake(randRange(-50, upper: 50), randRange(-650, upper: -500)))
+                println("GERILUGUIRIUERFGIRUE")
+                score++
+                
+            } else if self.nodeAtPoint(location).name == "bubble" && isAntiGravity == false {
+                
+                println("MIegiruirhiug")
+                
+            }
+            
             if CGRectContainsPoint(pauseButton.frame, location) && (!isGamePaused) {
                 
                 pauseGame()
                 
             }
-            if CGRectContainsPoint(pauseMenuQuitButton.frame, location) == true || CGRectContainsPoint(pauseMenuQuitText.frame, location) == true && isGamePaused == true {
-            var theGame = GameScene(size: self.view!.bounds.size)
-            let skView = self.view as SKView!
-            skView.ignoresSiblingOrder = true
-            theGame.scaleMode = .AspectFill
-            theGame.size = skView.bounds.size
-            self.removeAllChildren()
-            self.removeAllActions()
-            skView.presentScene(theGame, transition: SKTransition.crossFadeWithDuration(0.25))
+            
+            if self.nodeAtPoint(location) == pauseMenuQuitButton || self.nodeAtPoint(location) == pauseMenuQuitText && isGamePaused == true {
+                var theGame = GameScene(size: self.view!.bounds.size)
+                let skView = self.view as SKView!
+                skView.ignoresSiblingOrder = true
+                theGame.scaleMode = .AspectFill
+                theGame.size = skView.bounds.size
+                self.removeAllChildren()
+                self.removeAllActions()
+                skView.presentScene(theGame, transition: SKTransition.crossFadeWithDuration(0.25))
             }
             
-            if CGRectContainsPoint(pauseMenuRestartButton.frame, location) == true || CGRectContainsPoint(pauseMenuRestartText.frame, location) == true && isGamePaused == true {
-            var theGamePlay = GamePlayScene(size: self.view!.bounds.size)
-            let skView = self.view as SKView!
-            skView.ignoresSiblingOrder = true
-            theGamePlay.scaleMode = .AspectFill
-            theGamePlay.size = skView.bounds.size
-            self.removeAllChildren()
-            self.removeAllActions()
-            skView.presentScene(theGamePlay, transition: SKTransition.crossFadeWithDuration(0.25))
+            if self.nodeAtPoint(location) == pauseMenuRestartButton || self.nodeAtPoint(location) == pauseMenuRestartText && isGamePaused == true {
+                var theGamePlay = GamePlayScene(size: self.view!.bounds.size)
+                let skView = self.view as SKView!
+                skView.ignoresSiblingOrder = true
+                theGamePlay.scaleMode = .AspectFill
+                theGamePlay.size = skView.bounds.size
+                self.removeAllChildren()
+                self.removeAllActions()
+                skView.presentScene(theGamePlay, transition: SKTransition.crossFadeWithDuration(0.25))
             }
+            
+//            if CGRectContainsPoint(pauseMenuQuitButton.frame, location) == true || CGRectContainsPoint(pauseMenuQuitText.frame, location) == true && isGamePaused == true {
+//            var theGame = GameScene(size: self.view!.bounds.size)
+//            let skView = self.view as SKView!
+//            skView.ignoresSiblingOrder = true
+//            theGame.scaleMode = .AspectFill
+//            theGame.size = skView.bounds.size
+//            self.removeAllChildren()
+//            self.removeAllActions()
+//            skView.presentScene(theGame, transition: SKTransition.crossFadeWithDuration(0.25))
+//            }
+            
+//            if CGRectContainsPoint(pauseMenuRestartButton.frame, location) == true || CGRectContainsPoint(pauseMenuRestartText.frame, location) == true && isGamePaused == true {
+//            var theGamePlay = GamePlayScene(size: self.view!.bounds.size)
+//            let skView = self.view as SKView!
+//            skView.ignoresSiblingOrder = true
+//            theGamePlay.scaleMode = .AspectFill
+//            theGamePlay.size = skView.bounds.size
+//            self.removeAllChildren()
+//            self.removeAllActions()
+//            skView.presentScene(theGamePlay, transition: SKTransition.crossFadeWithDuration(0.25))
+//            }
         }
     }
     
@@ -333,13 +387,13 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
         
         let bubble:SKSpriteNode = SKSpriteNode(imageNamed: "bubble")
         bubble.physicsBody = SKPhysicsBody(circleOfRadius: bubble.frame.size.width/2)
-        bubble.physicsBody?.friction = 0.2
-        bubble.physicsBody?.restitution = 0.6
+        bubble.physicsBody?.friction = 1.0
+        bubble.physicsBody?.restitution = 1.0
         bubble.physicsBody?.linearDamping = 0.0
         bubble.physicsBody?.affectedByGravity = true
         bubble.xScale = 1
         bubble.yScale = 1
-        bubble.position = CGPoint(x: self.randRange(self.frame.width * 0.35, upper: self.frame.width * 0.65), y: self.randRange(self.frame.height * 0.25, upper: self.frame.height * 0.75))
+        bubble.position = CGPoint(x: self.frame.width/2, y: self.randRange(self.frame.height * 0.25, upper: self.frame.height * 0.75))
         bubble.name = "bubble"
         let bubbleRotationAction = SKAction.rotateByAngle(CGFloat(M_PI), duration:1)
         bubble.runAction(SKAction.repeatActionForever(bubbleRotationAction))
@@ -390,6 +444,18 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
             highScoreLabel.fontColor = red
             title.fontColor = red
         }
+        if self.physicsWorld.gravity.dy > 0 {
+            isAntiGravity = true
+        } else if physicsWorld.gravity.dy < 0 {
+            isAntiGravity = false
+        }
+        
+        let topVacuumTextures = [SKTexture(imageNamed: "topVacuumAnim0"), SKTexture(imageNamed: "topVacuumAnim1")]
+        
+        if isAntiGravity == false {
+            self.topVacuum.runAction(SKAction.repeatActionForever(SKAction.animateWithTextures(topVacuumTextures, timePerFrame: 0.5)))
+        }
+        
         func saveHighscoreToLeaderboard(score_:Int) {
             
             //check if user is signed in
@@ -415,6 +481,7 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
         
         timePassed++
         println(timePassed)
+        println("ISANTIGRAVITY: \(isAntiGravity)")
         println("LIVES!!! \(lives)")
         println("HIGH SCORE LABEL: \(highScoreLabel.text)")
         var elapsedTime = 0...timePassed
@@ -432,24 +499,28 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
             
         }
         
+        if timePassed != 0 && timePassed % 1000 == 0 {
+            self.physicsWorld.gravity.dy *= -1
+        }
+        
         if self.isGameOver == true {
             
             var highScore = NSUserDefaults.standardUserDefaults().integerForKey("highscore")
-            title.text = "LOOSER"
+            title.text = "LOSER"
             highScoreLabel.text = "SCORE: \(score)   BEST: \(highScore)"
             
         }
         
         let spawnABubble = SKAction.runBlock({let bubble:SKSpriteNode = SKSpriteNode(imageNamed: "bubble")
             bubble.physicsBody = SKPhysicsBody(circleOfRadius: bubble.frame.size.width/2)
-            //bubble.physicsBody?.mass = 1.0
-            bubble.physicsBody?.friction = 0.2
-            bubble.physicsBody?.restitution = 0.6
+            bubble.physicsBody?.mass = 1.0
+            bubble.physicsBody?.friction = 1.0
+            bubble.physicsBody?.restitution = 1.0
             bubble.physicsBody?.linearDamping = 0.0
             bubble.physicsBody?.affectedByGravity = true
             bubble.xScale = 1
             bubble.yScale = 1
-            bubble.position = CGPoint(x: self.randRange(self.frame.width * 0.35, upper: self.frame.width * 0.65), y: self.randRange(self.frame.height * 0.25, upper: self.frame.height * 0.75))
+            bubble.position = CGPoint(x: self.frame.width/2, y: self.randRange(self.frame.height * 0.25, upper: self.frame.height * 0.75))
             bubble.name = "bubble"
             let bubbleRotationAction = SKAction.rotateByAngle(CGFloat(M_PI), duration:1)
             bubble.runAction(SKAction.repeatActionForever(bubbleRotationAction))

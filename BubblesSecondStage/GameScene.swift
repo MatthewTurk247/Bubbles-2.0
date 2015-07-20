@@ -256,8 +256,8 @@ class GameScene: SKScene {
             let bubbleCategory:UInt64 = 0x1 << 0   //0000000000000000000000000000000000000000000000000000000000000001
             bubble.physicsBody = SKPhysicsBody(circleOfRadius: bubble.frame.size.width/2)
             bubble.physicsBody?.mass = 1.0
-            bubble.physicsBody?.friction = 0.2
-            bubble.physicsBody?.restitution = 0.6
+            bubble.physicsBody?.friction = 1.0
+            bubble.physicsBody?.restitution = 1.0
             bubble.physicsBody?.linearDamping = 0
             bubble.physicsBody?.density = 0.5
             bubble.physicsBody?.affectedByGravity = false

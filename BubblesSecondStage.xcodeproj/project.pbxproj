@@ -21,8 +21,8 @@
 		EB67E47C1B312F7F0054444C /* SaveData.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB67E47B1B312F7F0054444C /* SaveData.swift */; };
 		EB67E47E1B312FA20054444C /* InfoScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB67E47D1B312FA20054444C /* InfoScene.swift */; };
 		EB67E4801B3133AF0054444C /* SettingsScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB67E47F1B3133AF0054444C /* SettingsScene.swift */; };
+		EB84BF441B5D85F1001E1700 /* BigBubble.png in Resources */ = {isa = PBXBuildFile; fileRef = EB84BF431B5D85F1001E1700 /* BigBubble.png */; };
 		EBCF357B1B4C426200C6A8DB /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBCF357A1B4C426200C6A8DB /* GameKit.framework */; };
-		EBCF357D1B4CC20800C6A8DB /* Big Bubble.png in Resources */ = {isa = PBXBuildFile; fileRef = EBCF357C1B4CC20800C6A8DB /* Big Bubble.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,8 +54,8 @@
 		EB67E47B1B312F7F0054444C /* SaveData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaveData.swift; sourceTree = "<group>"; };
 		EB67E47D1B312FA20054444C /* InfoScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoScene.swift; sourceTree = "<group>"; };
 		EB67E47F1B3133AF0054444C /* SettingsScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsScene.swift; sourceTree = "<group>"; };
+		EB84BF431B5D85F1001E1700 /* BigBubble.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BigBubble.png; sourceTree = "<group>"; };
 		EBCF357A1B4C426200C6A8DB /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
-		EBCF357C1B4CC20800C6A8DB /* Big Bubble.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Big Bubble.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,7 +121,7 @@
 			isa = PBXGroup;
 			children = (
 				EB5CADAE1B4D908000437B73 /* bubblesTutorialVid.mov */,
-				EBCF357C1B4CC20800C6A8DB /* Big Bubble.png */,
+				EB84BF431B5D85F1001E1700 /* BigBubble.png */,
 				EB57A3D11B312B8F00BCD176 /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -232,9 +232,9 @@
 			files = (
 				EB5CADAF1B4D908000437B73 /* bubblesTutorialVid.mov in Resources */,
 				EB57A3E11B312B8F00BCD176 /* LaunchScreen.xib in Resources */,
+				EB84BF441B5D85F1001E1700 /* BigBubble.png in Resources */,
 				EB57A3DE1B312B8F00BCD176 /* Images.xcassets in Resources */,
 				EB57A3D51B312B8F00BCD176 /* GameScene.sks in Resources */,
-				EBCF357D1B4CC20800C6A8DB /* Big Bubble.png in Resources */,
 				EB57A3DC1B312B8F00BCD176 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
