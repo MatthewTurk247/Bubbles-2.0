@@ -18,6 +18,7 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
     func randRange (lower: CGFloat, upper: CGFloat) -> CGFloat {
         return lower + CGFloat(arc4random_uniform(UInt32(upper - lower + 1)))
     }
+    var justFailed:Bool = false
     var isGameOver = false
     let title:SKLabelNode = SKLabelNode(fontNamed: "Futura")
     let highScoreLabel:SKLabelNode = SKLabelNode(fontNamed: "Futura")
@@ -72,9 +73,10 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
     //let gameOver
     let bubbleCategory:UInt32 = 0x1 << 0
     let bottomCategory:UInt32 = 0x1 << 1
+    let topCategory:UInt32 = 0x1 << 2
     let adBackground = SKSpriteNode(imageNamed: "adBackground")
     var isAntiGravity:Bool = false
-    var adTextures = [SKTexture(imageNamed: ""), SKTexture(imageNamed: ""), SKTexture(imageNamed: ""), SKTexture(imageNamed: ""), SKTexture(imageNamed: ""), SKTexture(imageNamed: "")]
+    let topVacuumTextures = [SKTexture(imageNamed: "topVacuumAnim0"), SKTexture(imageNamed: "topVacuumAnim1")]
 
     override func didMoveToView(view: SKView) {
         
@@ -87,7 +89,6 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
         title.fontSize = 64
         title.position = CGPoint(x: self.frame.width * 0.5, y: self.frame.height * 0.725)
         self.addChild(title)
-        
         pauseMenuQuitButton.zPosition = -1
         pauseMenuQuitText.zPosition = -1
         pauseMenuRestartButton.zPosition = -1
@@ -103,13 +104,19 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
         bottomVacuum.zPosition = 4
         self.addChild(bottomVacuum)
         
-        let bottomRect = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.width, 1)
+        var bottomRect = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.width, 1)
         let bottom = SKNode()
         bottom.physicsBody = SKPhysicsBody(edgeLoopFromRect: bottomRect)
-        
         self.addChild(bottom)
         
         bottom.physicsBody?.categoryBitMask = bottomCategory
+        
+        var topRect = CGRectMake(self.frame.origin.x, self.frame.height, self.frame.width, 1)
+        let top = SKNode()
+        top.physicsBody = SKPhysicsBody(edgeLoopFromRect: topRect)
+        self.addChild(top)
+        
+        top.physicsBody?.categoryBitMask = topCategory
         
         
         let worldBorder = SKPhysicsBody(edgeLoopFromRect: self.frame)
@@ -231,6 +238,14 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
         adBackground.setScale(1.0)
         adBackground.zPosition = 4
         self.addChild(adBackground)
+        let continueText = SKLabelNode(fontNamed: "Futura")
+        continueText.fontColor = yellow
+        continueText.text = "Continue"
+        continueText.fontSize = 20
+        continueText.position = CGPoint(x: self.frame.width/2, y: adBackground.position.y * 0.4875)
+        continueText.zPosition = 5
+        continueText.name = "continueText"
+        self.addChild(continueText)
         title.zPosition = 3
         highScoreLabel.zPosition = 3
         var highScore = NSUserDefaults.standardUserDefaults().integerForKey("highscore")
@@ -321,6 +336,10 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
                 
             }
             
+            if self.nodeAtPoint(location).name == "continueText" && isGameOver == true {
+                println("Ïˆ´¨Óıˆ∑º™•™ª£†¶•ÓÏ˚ÔÆÒÎ∏Ô Ø´ÔÏˆ¨ÓÎ´ıÔŒÓˆ´Ó¨´‰")
+            }
+            
             if CGRectContainsPoint(pauseButton.frame, location) && (!isGamePaused) {
                 
                 pauseGame()
@@ -393,7 +412,7 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
         bubble.physicsBody?.affectedByGravity = true
         bubble.xScale = 1
         bubble.yScale = 1
-        bubble.position = CGPoint(x: self.frame.width/2, y: self.randRange(self.frame.height * 0.25, upper: self.frame.height * 0.75))
+        bubble.position = CGPoint(x: self.randRange(self.frame.width * 0.35, upper: self.frame.width * 0.65), y: self.frame.height/2)
         bubble.name = "bubble"
         let bubbleRotationAction = SKAction.rotateByAngle(CGFloat(M_PI), duration:1)
         bubble.runAction(SKAction.repeatActionForever(bubbleRotationAction))
@@ -404,19 +423,20 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
             
             firstBody.node?.removeFromParent()
             --lives
+            justFailed = true
             if lives < 3 {
                 
                 life1.removeFromParent()
 
             }
             
-            if lives < 2 {
+            if lives < 1 {
                 
                 life2.removeFromParent()
                 
             }
             
-            if lives < 1 {
+            if lives < -1 {
                 
                 life3.removeFromParent()
                 isGameOver = true
@@ -426,7 +446,6 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
             }
             //self.addChild(bubble)
             //bubble.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 0))
-            
         }
         
     }
@@ -450,9 +469,7 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
             isAntiGravity = false
         }
         
-        let topVacuumTextures = [SKTexture(imageNamed: "topVacuumAnim0"), SKTexture(imageNamed: "topVacuumAnim1")]
-        
-        if isAntiGravity == false {
+        if isAntiGravity == true {
             self.topVacuum.runAction(SKAction.repeatActionForever(SKAction.animateWithTextures(topVacuumTextures, timePerFrame: 0.5)))
         }
         
@@ -499,7 +516,7 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
             
         }
         
-        if timePassed != 0 && timePassed % 1000 == 0 {
+        if timePassed != 0 && timePassed % 750 == 0 {
             self.physicsWorld.gravity.dy *= -1
         }
         
@@ -520,15 +537,16 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
             bubble.physicsBody?.affectedByGravity = true
             bubble.xScale = 1
             bubble.yScale = 1
-            bubble.position = CGPoint(x: self.frame.width/2, y: self.randRange(self.frame.height * 0.25, upper: self.frame.height * 0.75))
+            bubble.position = CGPoint(x: self.randRange(self.frame.width * 0.35, upper: self.frame.width * 0.65), y: self.frame.height/2)
             bubble.name = "bubble"
             let bubbleRotationAction = SKAction.rotateByAngle(CGFloat(M_PI), duration:1)
             bubble.runAction(SKAction.repeatActionForever(bubbleRotationAction))
             bubble.physicsBody?.categoryBitMask = self.bubbleCategory
             bubble.physicsBody?.contactTestBitMask = self.bottomCategory
-            if self.timePassed % 500 == 0 || self.timePassed == 30 {
+            if self.timePassed % 500 == 0 || self.timePassed == 30 || self.justFailed == true {
                 self.addChild(bubble)
                 bubble.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 0))
+                self.justFailed = false
             }
         })
         let handleBubbles = SKAction.sequence([spawnABubble])

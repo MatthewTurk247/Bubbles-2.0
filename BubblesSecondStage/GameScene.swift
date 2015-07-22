@@ -64,10 +64,10 @@ class GameScene: SKScene {
     let life3 = SKSpriteNode(imageNamed: "heart")
     
     override func didMoveToView(view: SKView) {
+        
         println(UIScreen.mainScreen().bounds)
         println(language)
         self.scene?.backgroundColor = blue
-        
         func createAndMoveClouds() {
             //Cloud spawning
             let spawnACloud = SKAction.runBlock({let cloud = SKSpriteNode(imageNamed: "cloud")
@@ -254,6 +254,7 @@ class GameScene: SKScene {
             timePassed++
             let spawnABubble = SKAction.runBlock({let bubble:SKSpriteNode = SKSpriteNode(imageNamed: "bubble")
             let bubbleCategory:UInt64 = 0x1 << 0   //0000000000000000000000000000000000000000000000000000000000000001
+            bubble.zPosition = self.playButton.zPosition - 1
             bubble.physicsBody = SKPhysicsBody(circleOfRadius: bubble.frame.size.width/2)
             bubble.physicsBody?.mass = 1.0
             bubble.physicsBody?.friction = 1.0

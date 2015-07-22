@@ -9,6 +9,7 @@
 import UIKit
 import SpriteKit
 import GameKit
+import iAd
 
 extension SKNode {
     class func unarchiveFromFile(file : String) -> SKNode? {
@@ -26,8 +27,9 @@ extension SKNode {
     }
 }
 
-class GameViewController: UIViewController {
+class GameViewController: UIViewController, ADBannerViewDelegate {
     
+    var adBannerView: ADBannerView!
     override func viewDidLoad() {
         super.viewDidLoad()
         if let scene = GameScene.unarchiveFromFile("GameScene") as? GameScene {
@@ -43,6 +45,7 @@ class GameViewController: UIViewController {
             scene.scaleMode = .AspectFill
             
             skView.presentScene(scene)
+            loadAds()
             func authenticateLocalPlayer(){
                 
                 var localPlayer = GKLocalPlayer.localPlayer()
@@ -55,6 +58,37 @@ class GameViewController: UIViewController {
             authenticateLocalPlayer()
         }
         
+    }
+    
+    func bannerViewActionShouldBegin(banner: ADBannerView!, willLeaveApplication willLeave: Bool) -> Bool {
+        println("Leaving app to the Ad")
+        
+        return true
+    }
+    
+    func bannerViewDidLoadAd(banner: ADBannerView!) {
+        
+        adBannerView.center = CGPoint(x: adBannerView.center.x, y: self.view.bounds.size.height - adBannerView.frame.size.height / 2)
+        adBannerView.frame = CGRectOffset(adBannerView.frame,0.0,0.0)
+        adBannerView.hidden = false
+        
+        println("Displaying the Ad")
+    }
+    
+    
+    func bannerView(banner: ADBannerView!, didFailToReceiveAdWithError error: NSError!) {
+        
+        adBannerView.center = CGPoint(x: adBannerView.center.x, y: self.view.bounds.size.height + self.view.bounds.size.height)
+        println("Ad is not available")
+    }
+    
+    
+    func loadAds() {
+        adBannerView = ADBannerView(frame: CGRect.zeroRect)
+        adBannerView.frame = CGRectOffset(adBannerView.frame,0,0.0)
+        adBannerView.delegate = self
+        adBannerView.hidden = true
+        self.view.addSubview(adBannerView)
     }
     
     override func shouldAutorotate() -> Bool {
