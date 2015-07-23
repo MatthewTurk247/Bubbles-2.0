@@ -45,7 +45,7 @@ class GameScene: SKScene {
     let life3 = SKSpriteNode(imageNamed: "heart")
     
     override func didMoveToView(view: SKView) {
-        
+
         println(bottomRight.yScale)
         println(bottomRight.frame.height)
         println(UIScreen.mainScreen().bounds)
@@ -112,64 +112,61 @@ class GameScene: SKScene {
         bottomVacuum.zPosition = 4
         self.addChild(bottomVacuum)
         
+        let topLeftRect = SKShapeNode(rect: CGRect(x: self.frame.origin.x, y: self.frame.height - (self.topVacuum.frame.height) + 1, width: self.frame.width * 0.5, height: self.topVacuum.frame.height))
+        topLeftRect.zPosition = topVacuum.zPosition - 1
+        topLeftRect.strokeColor = red
+        topLeftRect.fillColor = red
+        topLeftRect.name = "topLeftRect"
+        self.addChild(topLeftRect)
         
-        topLeft.position = CGPoint(x: (self.frame.width * 0.5) - topLeft.frame.width, y: self.frame.height - (topLeft.frame.height/2.1))
-        topLeft.setScale(1.0)
-        topLeft.zPosition = topVacuum.zPosition - 1
-        if UIDevice.currentDevice().userInterfaceIdiom == .Pad || UIScreen.mainScreen().bounds == CGRectMake(0.0, 0.0, 320.0, 480.0) {
-            topLeft.xScale = 2.4
-        } else {
-            
-            topLeft.xScale = 1.2
-            
-        }
+        let topRightRect = SKShapeNode(rect: CGRect(x: self.frame.width/2, y: self.frame.height - (self.topVacuum.frame.height) + 1, width: self.frame.width * 0.5, height: self.topVacuum.frame.height))
+        topRightRect.zPosition = topVacuum.zPosition - 1
+        topRightRect.strokeColor = red
+        topRightRect.fillColor = red
+        topRightRect.name = "topRightRect"
+        self.addChild(topRightRect)
         
-        self.addChild(topLeft)
+        let bottomRightRect = SKShapeNode(rect: CGRect(x: self.frame.width/2, y: self.frame.origin.y, width: self.frame.width * 0.5, height: self.bottomVacuum.frame.height - 1))
+        bottomRightRect.zPosition = bottomVacuum.zPosition - 1
+        bottomRightRect.strokeColor = red
+        bottomRightRect.fillColor = red
+        topRightRect.name = "right"
+        self.addChild(bottomRightRect)
+        
+        let bottomLeftRect = SKShapeNode(rect: CGRect(x: self.frame.origin.x, y: self.frame.origin.y, width: self.frame.width * 0.5, height: self.bottomVacuum.frame.height - 1))
+        bottomLeftRect.zPosition = bottomVacuum.zPosition - 1
+        bottomLeftRect.strokeColor = red
+        bottomLeftRect.fillColor = red
+        bottomLeftRect.name = "left"
+        self.addChild(bottomLeftRect)
+        
+        println(bottomLeftRect.frame.height)
+        
+        topVacuum.setScale(1.0)
+        //self.addChild(topLeft)
         
         topRight.position = CGPoint(x: (self.frame.width * 0.5) + topRight.frame.width, y: topLeft.position.y)
         topRight.setScale(1.0)
         topRight.zPosition = topVacuum.zPosition - 1
         println(UIScreen.mainScreen().bounds)
-        if UIDevice.currentDevice().userInterfaceIdiom == .Pad || UIScreen.mainScreen().bounds == CGRectMake(0.0, 0.0, 320.0, 480.0) {
-            topRight.xScale = 2.4
-        } else {
-            
-            topRight.xScale = 1.2
-            
-        }
         
-        self.addChild(topRight)
+        //self.addChild(topRight)
         
         bottomLeft.position = CGPoint(x: topLeft.position.x, y: bottomLeft.frame.height/2.1)
         bottomLeft.setScale(1.0)
         bottomLeft.zPosition = topVacuum.zPosition - 1
-        if UIDevice.currentDevice().userInterfaceIdiom == .Pad || UIScreen.mainScreen().bounds == CGRectMake(0.0, 0.0, 320.0, 480.0) {
-            bottomLeft.xScale = 2.4
-        } else {
-            
-            bottomLeft.xScale = 1.2
-            
-        }
-        
-        self.addChild(bottomLeft)
+        //self.addChild(bottomLeft)
         
         bottomRight.position = CGPoint(x: topRight.position.x, y: bottomLeft.position.y)
         bottomRight.setScale(1.0)
         bottomRight.zPosition = topVacuum.zPosition - 1
-        if UIDevice.currentDevice().userInterfaceIdiom == .Pad || UIScreen.mainScreen().bounds == CGRectMake(0.0, 0.0, 320.0, 480.0) {
-            bottomRight.xScale = 2.4
-        } else {
-            
-            bottomRight.xScale = 1.2
-            
-        }
-        self.addChild(bottomRight)
+        //self.addChild(bottomRight)
         
-        settingsButton.position = CGPoint(x: bottomLeft.position.x * 0.9, y: bottomLeft.position.y * 0.8)
+        settingsButton.position = CGPoint(x: bottomLeftRect.frame.width * 0.6, y: bottomLeftRect.frame.height/2)
         settingsButton.zPosition = bottomLeft.zPosition + 5
         self.addChild(settingsButton)
         
-        infoDisclosureButton.position = CGPoint(x: bottomRight.position.x * 1.05, y: settingsButton.position.y)
+        infoDisclosureButton.position = CGPoint(x: bottomRightRect.frame.width/1.4, y: bottomRightRect.frame.height/2)
         infoDisclosureButton.zPosition = bottomRight.zPosition + 5
         self.addChild(infoDisclosureButton)
         
@@ -187,14 +184,13 @@ class GameScene: SKScene {
         
     }
     
-    
-    
     override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
         /* Called when a touch begins */
         
         for touch in (touches as! Set<UITouch>) {
             let location = touch.locationInNode(self)
-            if CGRectContainsPoint(bottomRight.frame, location) {
+
+            if CGRectContainsPoint(infoDisclosureButton.frame, location) || CGRectContainsPoint(CGRect(x: self.frame.width/2, y: self.frame.origin.y, width: self.frame.width * 0.5, height: self.bottomVacuum.frame.height - 1), location) {
                 var theInfo = InfoScene(size: self.view!.bounds.size)
                 let skView = self.view as SKView!
                 skView.ignoresSiblingOrder = true
@@ -205,7 +201,7 @@ class GameScene: SKScene {
                 skView.presentScene(theInfo, transition: SKTransition.crossFadeWithDuration(0.25))
             }
             
-            if CGRectContainsPoint(bottomLeft.frame, location) {
+            if CGRectContainsPoint(settingsButton.frame, location) || CGRectContainsPoint(CGRect(x: self.frame.origin.x, y: self.frame.origin.y, width: self.frame.width * 0.5, height: self.bottomVacuum.frame.height - 1), location) {
                 var theSettings = SettingsScene(size: self.view!.bounds.size)
                 let skView = self.view as SKView!
                 skView.ignoresSiblingOrder = true
@@ -217,7 +213,7 @@ class GameScene: SKScene {
             }
 
       
-                if CGRectContainsPoint(playButton.frame, location) {
+            if CGRectContainsPoint(playButton.frame, location) || CGRectContainsPoint(playText.frame, location) {
                     var theGamePlay = GamePlayScene(size: self.view!.bounds.size)
                     let skView = self.view as SKView!
                     skView.ignoresSiblingOrder = true
@@ -226,7 +222,7 @@ class GameScene: SKScene {
                     self.removeAllChildren()
                     self.removeAllActions()
                     skView.presentScene(theGamePlay, transition: SKTransition.crossFadeWithDuration(0.25))
-                }
+            }
                 
             
         }

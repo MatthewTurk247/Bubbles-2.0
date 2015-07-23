@@ -82,13 +82,17 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
         pauseMenuRestartButton.zPosition = -1
         pauseMenuRestartText.zPosition = -1
         
-        topVacuum.position = CGPoint(x: self.frame.width * 0.5, y: self.frame.height - 0.5 * (topVacuum.frame.height))
+        topVacuum.position = CGPoint(x: self.frame.width * 0.5, y: self.frame.height - (topVacuum.frame.height/2))
         topVacuum.setScale(1.0)
+        
+//        topVacuum.yScale = 1.2
+//        topVacuum.xScale = 1.2
         topVacuum.zPosition = 4
         self.addChild(topVacuum)
-        
-        bottomVacuum.position = CGPoint(x: self.frame.width * 0.5, y: 0.5 * (bottomVacuum.frame.height))
+        bottomVacuum.position = CGPoint(x: self.frame.width * 0.5, y: (bottomVacuum.frame.height/2))
         bottomVacuum.setScale(1.0)
+//        bottomVacuum.yScale = 1.2
+//        bottomVacuum.xScale = 1.2
         bottomVacuum.zPosition = 4
         self.addChild(bottomVacuum)
         
@@ -114,53 +118,53 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
         topLeft.position = CGPoint(x: (self.frame.width * 0.5) - topLeft.frame.width, y: self.frame.height - (topLeft.frame.height/2.1))
         topLeft.setScale(1.0)
         topLeft.zPosition = topVacuum.zPosition - 1
-        if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
-            topLeft.xScale = 2.4
-        } else {
-            
-            topLeft.xScale = 1.2
-            
-        }
-        
-        self.addChild(topLeft)
+
+        //self.addChild(topLeft)
         
         topRight.position = CGPoint(x: (self.frame.width * 0.5) + topRight.frame.width, y: topLeft.position.y)
         topRight.setScale(1.0)
         topRight.zPosition = topVacuum.zPosition - 1
-        if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
-            topRight.xScale = 2.4
-        } else {
-            
-            topRight.xScale = 1.2
-            
-        }
         
-        self.addChild(topRight)
+        //self.addChild(topRight)
         
         bottomLeft.position = CGPoint(x: topLeft.position.x, y: bottomLeft.frame.height/2.1)
         bottomLeft.setScale(1.0)
         bottomLeft.zPosition = topVacuum.zPosition - 1
-        if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
-            bottomLeft.xScale = 2.4
-        } else {
-            
-            bottomLeft.xScale = 1.2
-            
-        }
         
-        self.addChild(bottomLeft)
+        //self.addChild(bottomLeft)
         
         bottomRight.position = CGPoint(x: topRight.position.x, y: bottomLeft.position.y)
         bottomRight.setScale(1.0)
         bottomRight.zPosition = topVacuum.zPosition - 1
-        if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
-            bottomRight.xScale = 2.4
-        } else {
-            
-            bottomRight.xScale = 1.2
-            
-        }
-        self.addChild(bottomRight)
+        //self.addChild(bottomRight)
+        
+        let topLeftRect = SKShapeNode(rect: CGRect(x: self.frame.origin.x, y: self.frame.height - (self.topVacuum.frame.height) + 1, width: self.frame.width * 0.5, height: self.topVacuum.frame.height))
+        topLeftRect.zPosition = topVacuum.zPosition - 1
+        topLeftRect.strokeColor = red
+        topLeftRect.fillColor = red
+        topLeftRect.name = "topLeftRect"
+        self.addChild(topLeftRect)
+        
+        let topRightRect = SKShapeNode(rect: CGRect(x: self.frame.width/2, y: self.frame.height - (self.topVacuum.frame.height) + 1, width: self.frame.width * 0.5, height: self.topVacuum.frame.height))
+        topRightRect.zPosition = topVacuum.zPosition - 1
+        topRightRect.strokeColor = red
+        topRightRect.fillColor = red
+        topRightRect.name = "topRightRect"
+        self.addChild(topRightRect)
+        
+        let bottomRightRect = SKShapeNode(rect: CGRect(x: self.frame.width/2, y: self.frame.origin.y, width: self.frame.width * 0.5, height: self.bottomVacuum.frame.height - 1))
+        bottomRightRect.zPosition = bottomVacuum.zPosition - 1
+        bottomRightRect.strokeColor = red
+        bottomRightRect.fillColor = red
+        topRightRect.name = "bottomRightRect"
+        self.addChild(bottomRightRect)
+        
+        let bottomLeftRect = SKShapeNode(rect: CGRect(x: self.frame.origin.x, y: self.frame.origin.y, width: self.frame.width * 0.5, height: self.bottomVacuum.frame.height - 1))
+        bottomLeftRect.zPosition = bottomVacuum.zPosition - 1
+        bottomLeftRect.strokeColor = red
+        bottomLeftRect.fillColor = red
+        bottomLeftRect.name = "bottomLeftRect"
+        self.addChild(bottomLeftRect)
         
         highScoreLabel.fontColor = yellow
         //Eventually will have the NSUserDefaults stuff here and SaveData.swift
