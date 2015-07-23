@@ -109,7 +109,7 @@ class SettingsScene:SKScene, UINavigationControllerDelegate {
         removeAdsButton.position = CGPoint(x: self.frame.width/2, y: versionLabel.position.y * 0.7333)
         removeAdsButton.zPosition = 2
         removeAdsButton.setScale(0.089)
-        self.addChild(removeAdsButton)
+        //self.addChild(removeAdsButton)
         
         let redStrip = SKShapeNode(rect: CGRect(x: self.frame.origin.x, y: self.frame.origin.y, width: self.frame.width, height: self.frame.height * 0.14))
         redStrip.fillColor = red
@@ -145,7 +145,7 @@ class SettingsScene:SKScene, UINavigationControllerDelegate {
         removeAdsText.fontSize = 16
         removeAdsText.position = CGPoint(x: removeAdsButton.position.x, y: removeAdsButton.position.y * 0.99)
         removeAdsText.zPosition = removeAdsButton.zPosition + 1
-        self.addChild(removeAdsText)
+        //self.addChild(removeAdsText)
         
         musicSwitch.position = CGPoint(x: (self.frame.width/2) * 0.6, y: removeAdsButton.position.y * 0.8)
         musicSwitch.zPosition = 2
@@ -173,19 +173,37 @@ class SettingsScene:SKScene, UINavigationControllerDelegate {
         notificationsSwitch.position = CGPoint(x: self.frame.width/2, y: removeAdsButton.position.y * 0.525)
         notificationsSwitch.zPosition = 2
         notificationsSwitch.setScale(0.1)
-        self.addChild(notificationsSwitch)
+        //self.addChild(notificationsSwitch)
         
         notificationsText.fontColor = yellow
         notificationsText.text = "Notifications"
         notificationsText.fontSize = 20
         notificationsText.position = CGPoint(x: notificationsSwitch.position.x, y: notificationsSwitch.position.y * 0.7)
         
-        self.addChild(notificationsText)
+        //self.addChild(notificationsText)
         
     }
     
     override func update(currentTime: NSTimeInterval) {
-        //
+        
+        if NSUserDefaults.standardUserDefaults().boolForKey("music") == true {
+            musicSwitch.texture = SKTexture(imageNamed: "switchOn")
+        } else {
+            musicSwitch.texture = SKTexture(imageNamed: "switchOff")
+        }
+        
+        if NSUserDefaults.standardUserDefaults().boolForKey("SFX") == true {
+            SFXSwitch.texture = SKTexture(imageNamed: "switchOn")
+        } else {
+            SFXSwitch.texture = SKTexture(imageNamed: "switchOff")
+        }
+        
+        if NSUserDefaults.standardUserDefaults().boolForKey("notifs") == true {
+            notificationsSwitch.texture = SKTexture(imageNamed: "switchOn")
+        } else {
+            notificationsSwitch.texture = SKTexture(imageNamed: "switchOff")
+        }
+        
     }
     override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
         for touch in (touches as! Set<UITouch>) {
@@ -201,12 +219,40 @@ class SettingsScene:SKScene, UINavigationControllerDelegate {
                 self.removeAllActions()
                 skView.presentScene(theGame, transition: SKTransition.crossFadeWithDuration(0.25))
             }
+            if CGRectContainsPoint(restoreGameButton.frame, location) || CGRectContainsPoint(restoreGameText.frame, location) {
+                
+                //println(lead.scores[lead.localPlayerScore.rank])
+                //You must get the leaderboard score of the current user and assign it to NSUserDefaults.standardUserDefaults().integerForKey("highscore") if it is different than the gamecenter highscore
+                let leaderboardRequest = GKLeaderboard() as GKLeaderboard!
+                //var scores = leaderboardRequest.scores
+                leaderboardRequest.identifier = "bubblesgameleaderbooard2015"
+                
+            }
             
             if CGRectContainsPoint(websiteButton.frame, location) || CGRectContainsPoint(websiteText.frame, location) {
                 
                 UIApplication.sharedApplication().openURL(NSURL(string:"http://stackexchange.com/")!)
                 
             }
+            
+            if CGRectContainsPoint(SFXSwitch.frame, location) {
+                NSUserDefaults.standardUserDefaults().setBool(!NSUserDefaults.standardUserDefaults().boolForKey("SFX"), forKey: "SFX")
+                var sfxare = NSUserDefaults.standardUserDefaults().boolForKey("SFX")
+                println("EOIUHFRIUFOWDNJKV: \(sfxare)")
+            }
+            
+            if CGRectContainsPoint(notificationsSwitch.frame, location) {
+                NSUserDefaults.standardUserDefaults().setBool(!NSUserDefaults.standardUserDefaults().boolForKey("notifs"), forKey: "notifs")
+                var notifsare = NSUserDefaults.standardUserDefaults().boolForKey("notifs")
+                println("EOIUHFRIUFOWDNJKV: \(notifsare)")
+            }
+            
+            if CGRectContainsPoint(musicSwitch.frame, location) {
+                NSUserDefaults.standardUserDefaults().setBool(!NSUserDefaults.standardUserDefaults().boolForKey("music"), forKey: "music")
+                var musicis = NSUserDefaults.standardUserDefaults().boolForKey("music")
+                println("EOIUHFRIUFOWDNJKV: \(musicis)")
+            }
+            
             if CGRectContainsPoint(gameCenterButton.frame, location) || CGRectContainsPoint(gameCenterText.frame, location) {
                 func showLeader() {
                     var vc = self.view?.window?.rootViewController

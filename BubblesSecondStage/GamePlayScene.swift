@@ -10,6 +10,7 @@ import Foundation
 import SpriteKit
 import iAd
 import GameKit
+import AVFoundation
 
 class GamePlayScene:SKScene, SKPhysicsContactDelegate {
     
@@ -17,6 +18,12 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
     var version:AnyObject! = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleShortVersionString")
     func randRange (lower: CGFloat, upper: CGFloat) -> CGFloat {
         return lower + CGFloat(arc4random_uniform(UInt32(upper - lower + 1)))
+    }
+    var bubblePop = SKAction.playSoundFileNamed("bubblePop.mp3", waitForCompletion: false)
+    var bubbleSFX = SKAction.playSoundFileNamed("bubbleSFX.mp3", waitForCompletion: false)
+    func playSound(sound : SKAction)
+    {
+        runAction(sound)
     }
     var justFailed:Bool = false
     var isGameOver = false
@@ -34,25 +41,6 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
     var score = 0
     var timePassed:Int = 0
     var isGamePaused:Bool = false
-    func playTopVacuumAnimation() {
-        
-        let topVacuum0 = SKTexture(imageNamed: "topVacuumAnim0")
-        let topVacuum1 = SKTexture(imageNamed: "topVacuumAnim1")
-        
-        let topTextureAnim = SKAction.animateWithTextures([topVacuum0, topVacuum1], timePerFrame: 0.5)
-        let topVacuumAnim = SKAction.repeatActionForever(topTextureAnim)
-        topVacuum.runAction(topVacuumAnim)
-    }
-    func playBottomVacuumAnimation() {
-        
-        let bottomVacuum0 = SKTexture(imageNamed: "bottomVacuumAnim0")
-        let bottomVacuum1 = SKTexture(imageNamed: "bottomVacuumAnim1")
-        
-        let bottomTextureAnim = SKAction.animateWithTextures([bottomVacuum0, bottomVacuum1], timePerFrame: 0.5)
-        let bottomVacuumAnim = SKAction.repeatActionForever(bottomTextureAnim)
-        bottomVacuum.runAction(bottomTextureAnim)
-        
-    }
     let topLeft = SKSpriteNode(imageNamed: "cornerButton")
     let topRight = SKSpriteNode(imageNamed: "cornerButton")
     let bottomLeft = SKSpriteNode(imageNamed: "cornerButton")
@@ -76,7 +64,7 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
     let topCategory:UInt32 = 0x1 << 2
     let adBackground = SKSpriteNode(imageNamed: "adBackground")
     var isAntiGravity:Bool = false
-    let topVacuumTextures = [SKTexture(imageNamed: "topVacuumAnim0"), SKTexture(imageNamed: "topVacuumAnim1")]
+    let topVacuumTextures = [SKTexture(imageNamed: "topAnim0"), SKTexture(imageNamed: "topAnim1")]
 
     override func didMoveToView(view: SKView) {
         
@@ -223,6 +211,10 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
     
     func gameOver() {
         
+        self.topVacuum.texture = SKTexture(imageNamed: "topVacuumIdle")
+        self.bottomVacuum.texture = SKTexture(imageNamed: "bottomVacuumIdle")
+        self.topVacuum.color = SKColor(red: 0/255.0, green: 0/255.0, blue: 0/255.0, alpha: 0/255.0)
+        self.bottomVacuum.color = SKColor(red: 0/255.0, green: 0/255.0, blue: 0/255.0, alpha: 0/255.0)
         isGamePaused = true
         self.paused = true
         let tintScreenRect = CGRect(x: self.frame.origin.x, y: self.frame.origin.y, width: self.frame.width, height: self.frame.height)
@@ -234,7 +226,7 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
         self.addChild(tintScreen)
         
         let adBackground = SKSpriteNode(imageNamed: "adBackground")
-        adBackground.position = CGPoint(x: self.frame.width/2, y: self.frame.height * 0.4)
+        adBackground.position = CGPoint(x: self.frame.width/2, y: self.frame.height * 0.5)
         adBackground.setScale(1.0)
         adBackground.zPosition = 4
         self.addChild(adBackground)
@@ -242,16 +234,15 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
         continueText.fontColor = yellow
         continueText.text = "Continue"
         continueText.fontSize = 20
-        continueText.position = CGPoint(x: self.frame.width/2, y: adBackground.position.y * 0.4875)
+        continueText.position = CGPoint(x: self.frame.width/2, y: adBackground.position.y * 0.825)
         continueText.zPosition = 5
         continueText.name = "continueText"
         self.addChild(continueText)
+        
         title.zPosition = 3
         highScoreLabel.zPosition = 3
         var highScore = NSUserDefaults.standardUserDefaults().integerForKey("highscore")
         pauseButton.removeFromParent()
-
-        
     }
     
     func pauseGame() {
@@ -286,6 +277,7 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
         
         isGamePaused = false
         self.paused = false
+        GameViewController().backgroundMusicPlayer.volume = 0.5
         //Remove pause menu etc.
         childNodeWithName("tintScreen")?.removeFromParent()
         title.zPosition = 2
@@ -310,7 +302,9 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
             var node = self.nodeAtPoint(location)
             if self.nodeAtPoint(location).name == "bubble" && isAntiGravity == false {
 
-                
+                if NSUserDefaults.standardUserDefaults().boolForKey("SFX") == true {
+                    playSound(bubbleSFX)
+                }
                 self.nodeAtPoint(location).physicsBody?.applyImpulse(CGVectorMake(randRange(-50, upper: 50), randRange(500, upper: 650)))
                 println("TOUCHED")
                 score++
@@ -325,19 +319,21 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
             
             if self.nodeAtPoint(location).name == "bubble" && isAntiGravity == true {
                 
-                
+                if NSUserDefaults.standardUserDefaults().boolForKey("SFX") == true {
+                    playSound(bubbleSFX)
+                }
                 self.nodeAtPoint(location).physicsBody?.applyImpulse(CGVectorMake(randRange(-50, upper: 50), randRange(-650, upper: -500)))
                 println("GERILUGUIRIUERFGIRUE")
                 score++
                 
-            } else if self.nodeAtPoint(location).name == "bubble" && isAntiGravity == false {
-                
-                println("MIegiruirhiug")
-                
             }
             
-            if self.nodeAtPoint(location).name == "continueText" && isGameOver == true {
-                println("Ïˆ´¨Óıˆ∑º™•™ª£†¶•ÓÏ˚ÔÆÒÎ∏Ô Ø´ÔÏˆ¨ÓÎ´ıÔŒÓˆ´Ó¨´‰")
+//            if self.nodeAtPoint(location).name == "continueText" && isGameOver == true {
+//                println("Ïˆ´¨Óıˆ∑º™•™ª£†¶•ÓÏ˚ÔÆÒÎ∏Ô Ø´ÔÏˆ¨ÓÎ´ıÔŒÓˆ´Ó¨´‰")
+//            }
+            
+            if CGRectContainsPoint(CGRect(x: self.frame.origin.x, y: adBackground.position.y * 0.25, width: self.frame.height, height: adBackground.frame.height * 0.5), location) {
+                println("GERILUGUIRIUERFGIRUE")
             }
             
             if CGRectContainsPoint(pauseButton.frame, location) && (!isGamePaused) {
@@ -420,7 +416,9 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
         bubble.physicsBody?.contactTestBitMask = self.bottomCategory
         
         if firstBody.categoryBitMask == bubbleCategory && secondBody.categoryBitMask == bottomCategory {
-            
+            if NSUserDefaults.standardUserDefaults().boolForKey("SFX") == true {
+            playSound(bubblePop)
+            }
             firstBody.node?.removeFromParent()
             --lives
             justFailed = true
@@ -455,6 +453,7 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
     }
     
     override func update(currentTime: NSTimeInterval) {
+        
         if score > NSUserDefaults.standardUserDefaults().integerForKey("highscore") {
             //Do anything here when the user has a new highscore
             NSUserDefaults.standardUserDefaults().setInteger(score, forKey: "highscore")
@@ -467,10 +466,6 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
             isAntiGravity = true
         } else if physicsWorld.gravity.dy < 0 {
             isAntiGravity = false
-        }
-        
-        if isAntiGravity == true {
-            self.topVacuum.runAction(SKAction.repeatActionForever(SKAction.animateWithTextures(topVacuumTextures, timePerFrame: 0.5)))
         }
         
         func saveHighscoreToLeaderboard(score_:Int) {
@@ -497,6 +492,27 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
         saveHighscoreToLeaderboard(NSUserDefaults.standardUserDefaults().integerForKey("highscore"))
         
         timePassed++
+        if isAntiGravity == true && timePassed % 3 == 0 {
+            self.topVacuum.texture = SKTexture(imageNamed: "topAnim0")
+        } else if isAntiGravity == true && timePassed % 3 != 0 {
+            self.topVacuum.texture = SKTexture(imageNamed: "topAnim1")
+        } else {
+            self.topVacuum.texture = SKTexture(imageNamed: "topVacuumIdle")
+        }
+        
+        if isAntiGravity == false && timePassed % 3 == 0 {
+            self.bottomVacuum.texture = SKTexture(imageNamed: "bottomAnim0")
+        } else if isAntiGravity == false && timePassed % 3 != 0 {
+            self.bottomVacuum.texture = SKTexture(imageNamed: "bottomAnim1")
+        } else {
+            self.bottomVacuum.texture = SKTexture(imageNamed: "bottomVacuumIdle")
+        }
+        
+        if isGameOver == true {
+            self.topVacuum.texture = SKTexture(imageNamed: "topVacuumIdle")
+            self.bottomVacuum.texture = SKTexture(imageNamed: "bottomVacuumIdle")
+        }
+        
         println(timePassed)
         println("ISANTIGRAVITY: \(isAntiGravity)")
         println("LIVES!!! \(lives)")
@@ -516,7 +532,7 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
             
         }
         
-        if timePassed != 0 && timePassed % 750 == 0 {
+        if timePassed != 0 && timePassed % 450 == 0 {
             self.physicsWorld.gravity.dy *= -1
         }
         

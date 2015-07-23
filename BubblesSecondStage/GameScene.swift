@@ -30,25 +30,6 @@ class GameScene: SKScene {
     let topVacuum = SKSpriteNode(imageNamed: "topVacuumIdle")
     let bottomVacuum = SKSpriteNode(imageNamed: "bottomVacuumIdle")
     var timePassed:Int = 0
-    func playTopVacuumAnimation() {
-        
-        let topVacuum0 = SKTexture(imageNamed: "topVacuumAnim0")
-        let topVacuum1 = SKTexture(imageNamed: "topVacuumAnim1")
-        
-        let topTextureAnim = SKAction.animateWithTextures([topVacuum0, topVacuum1], timePerFrame: 0.5)
-        let topVacuumAnim = SKAction.repeatActionForever(topTextureAnim)
-        topVacuum.runAction(topVacuumAnim)
-    }
-    func playBottomVacuumAnimation() {
-        
-        let bottomVacuum0 = SKTexture(imageNamed: "bottomVacuumAnim0")
-        let bottomVacuum1 = SKTexture(imageNamed: "bottomVacuumAnim1")
-        
-        let bottomTextureAnim = SKAction.animateWithTextures([bottomVacuum0, bottomVacuum1], timePerFrame: 0.5)
-        let bottomVacuumAnim = SKAction.repeatActionForever(bottomTextureAnim)
-        bottomVacuum.runAction(bottomTextureAnim)
-        
-    }
     let topLeft = SKSpriteNode(imageNamed: "cornerButton")
     let topRight = SKSpriteNode(imageNamed: "cornerButton")
     let bottomLeft = SKSpriteNode(imageNamed: "cornerButton")

@@ -10,6 +10,7 @@ import UIKit
 import SpriteKit
 import GameKit
 import iAd
+import AVFoundation
 
 extension SKNode {
     class func unarchiveFromFile(file : String) -> SKNode? {
@@ -29,7 +30,8 @@ extension SKNode {
 
 class GameViewController: UIViewController, ADBannerViewDelegate {
     
-    var adBannerView: ADBannerView!
+    var backgroundMusicPlayer:AVAudioPlayer = AVAudioPlayer()
+    var adBannerView:ADBannerView!
     override func viewDidLoad() {
         super.viewDidLoad()
         if let scene = GameScene.unarchiveFromFile("GameScene") as? GameScene {
@@ -45,7 +47,16 @@ class GameViewController: UIViewController, ADBannerViewDelegate {
             scene.scaleMode = .AspectFill
             
             skView.presentScene(scene)
-            loadAds()
+            
+            var bgMusicURL:NSURL = NSBundle.mainBundle().URLForResource("neverMind", withExtension: "mp3")!
+            backgroundMusicPlayer = AVAudioPlayer(contentsOfURL: bgMusicURL, error: nil)
+            backgroundMusicPlayer.numberOfLoops = -1
+            backgroundMusicPlayer.volume = 0.5
+            if NSUserDefaults.standardUserDefaults().boolForKey("music") == true {
+            backgroundMusicPlayer.prepareToPlay()
+            backgroundMusicPlayer.play()
+            }
+            
             func authenticateLocalPlayer(){
                 
                 var localPlayer = GKLocalPlayer.localPlayer()
@@ -56,6 +67,7 @@ class GameViewController: UIViewController, ADBannerViewDelegate {
                 
             }
             authenticateLocalPlayer()
+            loadAds()
         }
         
     }
@@ -68,20 +80,20 @@ class GameViewController: UIViewController, ADBannerViewDelegate {
     
     func bannerViewDidLoadAd(banner: ADBannerView!) {
         
-        adBannerView.center = CGPoint(x: adBannerView.center.x, y: self.view.bounds.size.height - adBannerView.frame.size.height / 2)
+        adBannerView.center = CGPoint(x: adBannerView.center.x, y: self.view.bounds.size.height - GamePlayScene().bottomVacuum.frame.height / 0.75)
         adBannerView.frame = CGRectOffset(adBannerView.frame,0.0,0.0)
         adBannerView.hidden = false
-        
+        println(GamePlayScene().bottomVacuum.frame.height)
+        println(GamePlayScene().isGameOver)
         println("Displaying the Ad")
+        
     }
     
     
     func bannerView(banner: ADBannerView!, didFailToReceiveAdWithError error: NSError!) {
-        
         adBannerView.center = CGPoint(x: adBannerView.center.x, y: self.view.bounds.size.height + self.view.bounds.size.height)
         println("Ad is not available")
     }
-    
     
     func loadAds() {
         adBannerView = ADBannerView(frame: CGRect.zeroRect)

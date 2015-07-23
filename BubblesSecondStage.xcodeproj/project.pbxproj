@@ -16,12 +16,16 @@
 		EB57A3E11B312B8F00BCD176 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB57A3DF1B312B8F00BCD176 /* LaunchScreen.xib */; };
 		EB57A3ED1B312B8F00BCD176 /* BubblesSecondStageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB57A3EC1B312B8F00BCD176 /* BubblesSecondStageTests.swift */; };
 		EB5B449C1B35DE130018A900 /* GamePlayScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB5B449B1B35DE130018A900 /* GamePlayScene.swift */; };
-		EB5CADAF1B4D908000437B73 /* bubblesTutorialVid.mov in Resources */ = {isa = PBXBuildFile; fileRef = EB5CADAE1B4D908000437B73 /* bubblesTutorialVid.mov */; };
 		EB5CADE11B4DBBBB00437B73 /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB5CADE01B4DBBBB00437B73 /* iAd.framework */; };
 		EB67E47C1B312F7F0054444C /* SaveData.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB67E47B1B312F7F0054444C /* SaveData.swift */; };
 		EB67E47E1B312FA20054444C /* InfoScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB67E47D1B312FA20054444C /* InfoScene.swift */; };
 		EB67E4801B3133AF0054444C /* SettingsScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB67E47F1B3133AF0054444C /* SettingsScene.swift */; };
 		EB84BF441B5D85F1001E1700 /* BigBubble.png in Resources */ = {isa = PBXBuildFile; fileRef = EB84BF431B5D85F1001E1700 /* BigBubble.png */; };
+		EBC6690F1B5FEADE003D6E07 /* bubblesTutorialVid.mov in Resources */ = {isa = PBXBuildFile; fileRef = EBC6690E1B5FEADE003D6E07 /* bubblesTutorialVid.mov */; };
+		EBC669111B5FEFFC003D6E07 /* bubbleSFX.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = EBC669101B5FEFFC003D6E07 /* bubbleSFX.mp3 */; };
+		EBC669131B5FF0B9003D6E07 /* bubblePop.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = EBC669121B5FF0B9003D6E07 /* bubblePop.mp3 */; };
+		EBC669151B5FF87A003D6E07 /* wonderous.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = EBC669141B5FF87A003D6E07 /* wonderous.mp3 */; };
+		EBC669171B5FFC49003D6E07 /* neverMind.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = EBC669161B5FFC49003D6E07 /* neverMind.mp3 */; };
 		EBCF357B1B4C426200C6A8DB /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBCF357A1B4C426200C6A8DB /* GameKit.framework */; };
 /* End PBXBuildFile section */
 
@@ -49,12 +53,16 @@
 		EB57A3EB1B312B8F00BCD176 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EB57A3EC1B312B8F00BCD176 /* BubblesSecondStageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BubblesSecondStageTests.swift; sourceTree = "<group>"; };
 		EB5B449B1B35DE130018A900 /* GamePlayScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GamePlayScene.swift; sourceTree = "<group>"; };
-		EB5CADAE1B4D908000437B73 /* bubblesTutorialVid.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = bubblesTutorialVid.mov; sourceTree = "<group>"; };
 		EB5CADE01B4DBBBB00437B73 /* iAd.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iAd.framework; path = System/Library/Frameworks/iAd.framework; sourceTree = SDKROOT; };
 		EB67E47B1B312F7F0054444C /* SaveData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaveData.swift; sourceTree = "<group>"; };
 		EB67E47D1B312FA20054444C /* InfoScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoScene.swift; sourceTree = "<group>"; };
 		EB67E47F1B3133AF0054444C /* SettingsScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsScene.swift; sourceTree = "<group>"; };
 		EB84BF431B5D85F1001E1700 /* BigBubble.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BigBubble.png; sourceTree = "<group>"; };
+		EBC6690E1B5FEADE003D6E07 /* bubblesTutorialVid.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = bubblesTutorialVid.mov; sourceTree = "<group>"; };
+		EBC669101B5FEFFC003D6E07 /* bubbleSFX.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = bubbleSFX.mp3; sourceTree = "<group>"; };
+		EBC669121B5FF0B9003D6E07 /* bubblePop.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = bubblePop.mp3; sourceTree = "<group>"; };
+		EBC669141B5FF87A003D6E07 /* wonderous.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = wonderous.mp3; sourceTree = "<group>"; };
+		EBC669161B5FFC49003D6E07 /* neverMind.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = neverMind.mp3; sourceTree = "<group>"; };
 		EBCF357A1B4C426200C6A8DB /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -120,7 +128,11 @@
 		EB57A3D01B312B8F00BCD176 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				EB5CADAE1B4D908000437B73 /* bubblesTutorialVid.mov */,
+				EBC669161B5FFC49003D6E07 /* neverMind.mp3 */,
+				EBC669141B5FF87A003D6E07 /* wonderous.mp3 */,
+				EBC669121B5FF0B9003D6E07 /* bubblePop.mp3 */,
+				EBC669101B5FEFFC003D6E07 /* bubbleSFX.mp3 */,
+				EBC6690E1B5FEADE003D6E07 /* bubblesTutorialVid.mov */,
 				EB84BF431B5D85F1001E1700 /* BigBubble.png */,
 				EB57A3D11B312B8F00BCD176 /* Info.plist */,
 			);
@@ -230,12 +242,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EB5CADAF1B4D908000437B73 /* bubblesTutorialVid.mov in Resources */,
+				EBC669151B5FF87A003D6E07 /* wonderous.mp3 in Resources */,
+				EBC6690F1B5FEADE003D6E07 /* bubblesTutorialVid.mov in Resources */,
 				EB57A3E11B312B8F00BCD176 /* LaunchScreen.xib in Resources */,
 				EB84BF441B5D85F1001E1700 /* BigBubble.png in Resources */,
 				EB57A3DE1B312B8F00BCD176 /* Images.xcassets in Resources */,
+				EBC669171B5FFC49003D6E07 /* neverMind.mp3 in Resources */,
 				EB57A3D51B312B8F00BCD176 /* GameScene.sks in Resources */,
 				EB57A3DC1B312B8F00BCD176 /* Main.storyboard in Resources */,
+				EBC669131B5FF0B9003D6E07 /* bubblePop.mp3 in Resources */,
+				EBC669111B5FEFFC003D6E07 /* bubbleSFX.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
