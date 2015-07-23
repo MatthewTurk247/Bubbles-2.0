@@ -241,18 +241,21 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
         gameOverMainMenuButton.zPosition = 4
         gameOverMainMenuButton.position = CGPoint(x: self.frame.width/2, y: self.highScoreLabel.position.y * 0.85)
         gameOverMainMenuButton.setScale(0.1)
+        gameOverMainMenuButton.name = "MainMenuButton"
         self.addChild(gameOverMainMenuButton)
         
         let gameOverPlayAgainButton = SKSpriteNode(imageNamed: "pillButtonBlue")
         gameOverPlayAgainButton.zPosition = 4
         gameOverPlayAgainButton.position = CGPoint(x: self.frame.width/2, y: self.highScoreLabel.position.y * 0.7333)
         gameOverPlayAgainButton.setScale(0.1)
+        gameOverPlayAgainButton.name = "PlayAgainButton"
         self.addChild(gameOverPlayAgainButton)
         
         let gameOverGameCenterButton = SKSpriteNode(imageNamed: "pillButtonGrey")
         gameOverGameCenterButton.zPosition = 4
         gameOverGameCenterButton.position = CGPoint(x: self.frame.width/2, y: self.highScoreLabel.position.y * 0.5)
         gameOverGameCenterButton.setScale(0.1)
+        gameOverGameCenterButton.name = "GameCenterButton"
         self.addChild(gameOverGameCenterButton)
         
         let gameOverMainMenuLabel = SKLabelNode(fontNamed: "Futura")
@@ -261,9 +264,26 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
         gameOverMainMenuLabel.position = CGPoint(x: gameOverMainMenuButton.position.x, y: gameOverMainMenuButton.position.y * 0.99)
         gameOverMainMenuLabel.zPosition = 5
         gameOverMainMenuLabel.text = "Main Menu"
+        gameOverMainMenuLabel.name = "MainMenuLabel"
         self.addChild(gameOverMainMenuLabel)
         
         let gameOverPlayAgainLabel = SKLabelNode(fontNamed: "Futura")
+        gameOverPlayAgainLabel.fontColor = SKColor.whiteColor()
+        gameOverPlayAgainLabel.fontSize = 16
+        gameOverPlayAgainLabel.position = CGPoint(x: gameOverPlayAgainButton.position.x, y: gameOverPlayAgainButton.position.y * 0.99)
+        gameOverPlayAgainLabel.zPosition = 5
+        gameOverPlayAgainLabel.text = "Play Again"
+        gameOverPlayAgainLabel.name = "PlayAgainLabel"
+        self.addChild(gameOverPlayAgainLabel)
+        
+        let gameOverGameCenterLabel = SKLabelNode(fontNamed: "Futura")
+        gameOverGameCenterLabel.fontColor = SKColor.whiteColor()
+        gameOverGameCenterLabel.fontSize = 16
+        gameOverGameCenterLabel.position = CGPoint(x: gameOverGameCenterButton.position.x, y: gameOverGameCenterButton.position.y * 0.99)
+        gameOverGameCenterLabel.zPosition = 5
+        gameOverGameCenterLabel.text = "Game Center"
+        gameOverGameCenterLabel.name = "GameCenterLabel"
+        self.addChild(gameOverGameCenterLabel)
         
         title.zPosition = 3
         highScoreLabel.zPosition = 3
@@ -339,6 +359,65 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
             
                 println("MISSED")
             
+            }
+            
+            if self.nodeAtPoint(location).name == "MainMenuButton" || self.nodeAtPoint(location).name == "MainMenuLabel" && isGameOver == true {
+                var theGame = GameScene(size: self.view!.bounds.size)
+                let skView = self.view as SKView!
+                skView.ignoresSiblingOrder = true
+                theGame.scaleMode = .AspectFill
+                theGame.size = skView.bounds.size
+                self.removeAllChildren()
+                self.removeAllActions()
+                skView.presentScene(theGame, transition: SKTransition.crossFadeWithDuration(0.25))
+            }
+            
+            if self.nodeAtPoint(location).name == "PlayAgainButton" || self.nodeAtPoint(location).name == "PlayAgainLabel" && isGameOver == true {
+                var theGamePlay = GamePlayScene(size: self.view!.bounds.size)
+                let skView = self.view as SKView!
+                skView.ignoresSiblingOrder = true
+                theGamePlay.scaleMode = .AspectFill
+                theGamePlay.size = skView.bounds.size
+                self.removeAllChildren()
+                self.removeAllActions()
+                skView.presentScene(theGamePlay, transition: SKTransition.crossFadeWithDuration(0.25))
+            }
+            
+            if self.nodeAtPoint(location).name == "GameCenterButton" || self.nodeAtPoint(location).name == "GameCenterLabel" && isGameOver == true {
+                func showLeader() {
+                    var vc = self.view?.window?.rootViewController
+                    var gc = GKGameCenterViewController()
+                    vc?.presentViewController(gc, animated: true, completion: nil)
+                    //gc.delegate = self.view?.window?.rootViewController?.navigationController?.delegate
+                    gc.delegate = GameViewController().navigationController?.delegate
+                    //gc.delegate = self
+                    func gameCenterViewControllerDidFinish(gameCenterViewController: GKGameCenterViewController!) {
+                        gameCenterViewController.dismissViewControllerAnimated(true, completion: nil)
+                        
+                    }
+                }
+                func saveHighscoreToLeaderboard(score:Int) {
+                    
+                    //check if user is signed in
+                    if GKLocalPlayer.localPlayer().authenticated {
+                        
+                        var scoreReporter = GKScore(leaderboardIdentifier: "bubblesgameleaderboard2015") //leaderboard id here
+                        
+                        scoreReporter.value = Int64(score) //score variable here (same as above)
+                        
+                        var scoreArray: [GKScore] = [scoreReporter]
+                        GKScore.reportScores(scoreArray, withCompletionHandler: {(error : NSError!) -> Void in
+                            if error != nil {
+                                println("error")
+                            }
+                        })
+                        
+                    }
+                    
+                }
+                println(NSUserDefaults.standardUserDefaults().integerForKey("highscore"))
+                saveHighscoreToLeaderboard(NSUserDefaults.standardUserDefaults().integerForKey("highscore"))
+                showLeader()
             }
             
             println(isAntiGravity)
@@ -541,7 +620,6 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
             }
             
         }
-        
         saveHighscoreToLeaderboard(NSUserDefaults.standardUserDefaults().integerForKey("highscore"))
         if self.isGamePaused == false && self.isGameOver == false {
         timePassed++

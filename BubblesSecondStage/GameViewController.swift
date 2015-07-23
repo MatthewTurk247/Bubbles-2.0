@@ -54,7 +54,8 @@ class GameViewController: UIViewController, ADBannerViewDelegate {
                 backgroundMusicPlayer.prepareToPlay()
                 backgroundMusicPlayer.play()
             }
-            
+        }
+        
             func authenticateLocalPlayer(){
                 
                 var localPlayer = GKLocalPlayer.localPlayer()
@@ -66,7 +67,7 @@ class GameViewController: UIViewController, ADBannerViewDelegate {
             }
             authenticateLocalPlayer()
             loadAds()
-        }
+        //}
         
     }
     
@@ -80,9 +81,8 @@ class GameViewController: UIViewController, ADBannerViewDelegate {
         
         adBannerView.center = CGPoint(x: adBannerView.center.x, y: self.view.bounds.size.height - GamePlayScene().bottomVacuum.frame.height / 0.78)
         adBannerView.frame = CGRectOffset(adBannerView.frame,0.0,0.0)
-        adBannerView.hidden = false
         println(GamePlayScene().bottomVacuum.frame.height)
-        println(GamePlayScene().isGameOver)
+            adBannerView.hidden = false
         println("Displaying the Ad")
         
     }

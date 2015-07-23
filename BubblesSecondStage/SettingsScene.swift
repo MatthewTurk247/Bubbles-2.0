@@ -259,6 +259,7 @@ class SettingsScene:SKScene, UINavigationControllerDelegate {
                     var gc = GKGameCenterViewController()
                     vc?.presentViewController(gc, animated: true, completion: nil)
                     //gc.delegate = self.view?.window?.rootViewController?.navigationController?.delegate
+                    gc.delegate = GameViewController().navigationController?.delegate
                     //gc.delegate = self
                     func gameCenterViewControllerDidFinish(gameCenterViewController: GKGameCenterViewController!) {
                         gameCenterViewController.dismissViewControllerAnimated(true, completion: nil)

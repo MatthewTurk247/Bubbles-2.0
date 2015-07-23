@@ -161,12 +161,13 @@ class GameScene: SKScene {
         bottomRight.zPosition = topVacuum.zPosition - 1
         //self.addChild(bottomRight)
         
-        settingsButton.position = CGPoint(x: bottomLeftRect.frame.width * 0.6, y: bottomLeftRect.frame.height/2)
+        settingsButton.position = CGPoint(x: bottomLeftRect.frame.width - 4*(settingsButton.frame.width), y: bottomLeftRect.frame.height/2)
         settingsButton.zPosition = bottomLeft.zPosition + 5
         self.addChild(settingsButton)
         
-        infoDisclosureButton.position = CGPoint(x: bottomRightRect.frame.width/1.4, y: bottomRightRect.frame.height/2)
-        infoDisclosureButton.zPosition = bottomRight.zPosition + 5
+        infoDisclosureButton.position = CGPointMake(bottomRightRect.frame.width/2 + 4*(infoDisclosureButton.frame.width), bottomRightRect.frame.height/2)
+        println(infoDisclosureButton.position)
+        infoDisclosureButton.zPosition = bottomRightRect.zPosition + 5
         self.addChild(infoDisclosureButton)
         
         pauseButton.position = CGPoint(x: topLeft.position.x * 0.95, y: topLeft.position.y * 1.015)
