@@ -46,6 +46,8 @@ class GameScene: SKScene {
     
     override func didMoveToView(view: SKView) {
         
+        println(bottomRight.yScale)
+        println(bottomRight.frame.height)
         println(UIScreen.mainScreen().bounds)
         println(language)
         self.scene?.backgroundColor = blue
@@ -90,7 +92,7 @@ class GameScene: SKScene {
         self.addChild(highScoreLabel)
         
         playButton.position = CGPoint(x: self.frame.width/2, y: self.frame.height * 0.45)
-        playButton.setScale(1)
+        playButton.setScale(1.0)
         self.addChild(playButton)
         
         playText.fontColor = SKColor.whiteColor()
@@ -101,18 +103,18 @@ class GameScene: SKScene {
         self.addChild(playText)
         
         topVacuum.position = CGPoint(x: self.frame.width * 0.5, y: self.frame.height - 0.5 * (topVacuum.frame.height))
-        topVacuum.setScale(1.2)
+        topVacuum.setScale(1.0)
         topVacuum.zPosition = 4
         self.addChild(topVacuum)
         
         bottomVacuum.position = CGPoint(x: self.frame.width * 0.5, y: 0.5 * (bottomVacuum.frame.height))
-        bottomVacuum.setScale(1.2)
+        bottomVacuum.setScale(1.0)
         bottomVacuum.zPosition = 4
         self.addChild(bottomVacuum)
         
         
         topLeft.position = CGPoint(x: (self.frame.width * 0.5) - topLeft.frame.width, y: self.frame.height - (topLeft.frame.height/2.1))
-        topLeft.setScale(1.2)
+        topLeft.setScale(1.0)
         topLeft.zPosition = topVacuum.zPosition - 1
         if UIDevice.currentDevice().userInterfaceIdiom == .Pad || UIScreen.mainScreen().bounds == CGRectMake(0.0, 0.0, 320.0, 480.0) {
             topLeft.xScale = 2.4
@@ -125,7 +127,7 @@ class GameScene: SKScene {
         self.addChild(topLeft)
         
         topRight.position = CGPoint(x: (self.frame.width * 0.5) + topRight.frame.width, y: topLeft.position.y)
-        topRight.setScale(1.2)
+        topRight.setScale(1.0)
         topRight.zPosition = topVacuum.zPosition - 1
         println(UIScreen.mainScreen().bounds)
         if UIDevice.currentDevice().userInterfaceIdiom == .Pad || UIScreen.mainScreen().bounds == CGRectMake(0.0, 0.0, 320.0, 480.0) {
@@ -139,7 +141,7 @@ class GameScene: SKScene {
         self.addChild(topRight)
         
         bottomLeft.position = CGPoint(x: topLeft.position.x, y: bottomLeft.frame.height/2.1)
-        bottomLeft.setScale(1.2)
+        bottomLeft.setScale(1.0)
         bottomLeft.zPosition = topVacuum.zPosition - 1
         if UIDevice.currentDevice().userInterfaceIdiom == .Pad || UIScreen.mainScreen().bounds == CGRectMake(0.0, 0.0, 320.0, 480.0) {
             bottomLeft.xScale = 2.4
@@ -152,7 +154,7 @@ class GameScene: SKScene {
         self.addChild(bottomLeft)
         
         bottomRight.position = CGPoint(x: topRight.position.x, y: bottomLeft.position.y)
-        bottomRight.setScale(1.2)
+        bottomRight.setScale(1.0)
         bottomRight.zPosition = topVacuum.zPosition - 1
         if UIDevice.currentDevice().userInterfaceIdiom == .Pad || UIScreen.mainScreen().bounds == CGRectMake(0.0, 0.0, 320.0, 480.0) {
             bottomRight.xScale = 2.4
@@ -219,7 +221,7 @@ class GameScene: SKScene {
                     var theGamePlay = GamePlayScene(size: self.view!.bounds.size)
                     let skView = self.view as SKView!
                     skView.ignoresSiblingOrder = true
-                    theGamePlay.scaleMode = .AspectFill
+                    theGamePlay.scaleMode = .ResizeFill
                     theGamePlay.size = skView.bounds.size
                     self.removeAllChildren()
                     self.removeAllActions()

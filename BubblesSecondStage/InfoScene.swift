@@ -153,6 +153,7 @@ class InfoScene:SKScene {
         for touch in (touches as! Set<UITouch>) {
             let location = touch.locationInNode(self)
             let backButton = self.childNodeWithName("backButton")
+          
             if CGRectContainsPoint(backButton!.frame, location) {
                 var theGame = GameScene(size: self.view!.bounds.size)
                 let skView = self.view as SKView!
