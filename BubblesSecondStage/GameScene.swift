@@ -139,7 +139,6 @@ class GameScene: SKScene {
         bottomLeftRect.fillColor = red
         bottomLeftRect.name = "left"
         self.addChild(bottomLeftRect)
-        
         println(bottomLeftRect.frame.height)
         
         topVacuum.setScale(1.0)

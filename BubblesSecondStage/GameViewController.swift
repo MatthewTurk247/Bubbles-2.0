@@ -51,8 +51,8 @@ class GameViewController: UIViewController, ADBannerViewDelegate {
             backgroundMusicPlayer.numberOfLoops = -1
             backgroundMusicPlayer.volume = 0.5
             if NSUserDefaults.standardUserDefaults().boolForKey("music") == true {
-            backgroundMusicPlayer.prepareToPlay()
-            backgroundMusicPlayer.play()
+                backgroundMusicPlayer.prepareToPlay()
+                backgroundMusicPlayer.play()
             }
             
             func authenticateLocalPlayer(){
@@ -78,7 +78,7 @@ class GameViewController: UIViewController, ADBannerViewDelegate {
     
     func bannerViewDidLoadAd(banner: ADBannerView!) {
         
-        adBannerView.center = CGPoint(x: adBannerView.center.x, y: self.view.bounds.size.height - GamePlayScene().bottomVacuum.frame.height / 0.75)
+        adBannerView.center = CGPoint(x: adBannerView.center.x, y: self.view.bounds.size.height - GamePlayScene().bottomVacuum.frame.height / 0.78)
         adBannerView.frame = CGRectOffset(adBannerView.frame,0.0,0.0)
         adBannerView.hidden = false
         println(GamePlayScene().bottomVacuum.frame.height)

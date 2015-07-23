@@ -11,6 +11,7 @@ import SpriteKit
 import iAd
 import GameKit
 import AVFoundation
+import QuartzCore
 
 class GamePlayScene:SKScene, SKPhysicsContactDelegate {
     
@@ -62,7 +63,6 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
     let bubbleCategory:UInt32 = 0x1 << 0
     let bottomCategory:UInt32 = 0x1 << 1
     let topCategory:UInt32 = 0x1 << 2
-    let adBackground = SKSpriteNode(imageNamed: "adBackground")
     var isAntiGravity:Bool = false
     let topVacuumTextures = [SKTexture(imageNamed: "topAnim0"), SKTexture(imageNamed: "topAnim1")]
 
@@ -177,16 +177,19 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
         let bubble:SKSpriteNode = SKSpriteNode(imageNamed: "bubble")
         let bubbleCatagory:UInt64 = 0x1 << 0   //0000000000000000000000000000000000000000000000000000000000000001
         bubble.name = "bubble"
-        pauseButton.position = CGPoint(x: topLeft.position.x * 0.85, y: topLeft.position.y * 1.02)
+        pauseButton.position = CGPoint(x: topLeftRect.frame.width * 0.25, y: topLeft.position.y * 1.02)
         pauseButton.zPosition = topLeft.zPosition + 5
-        life1.position = CGPoint(x: topRight.position.x * 0.9, y: topRight.position.y * 1.045)
+        life1.position = CGPoint(x: topRightRect.frame.width/1.3, y: topRight.position.y * 1.05)
         life1.zPosition = topRight.zPosition + 5
+        life1.setScale(0.9)
         
         life2.position = CGPoint(x: life1.position.x * 1.1, y: life1.position.y * 0.975)
         life2.zPosition = topRight.zPosition + 5
+        life2.setScale(0.9)
         
         life3.position = CGPoint(x: life2.position.x * 1.09, y: life2.position.y * 0.9725)
         life3.zPosition = topRight.zPosition + 5
+        life3.setScale(0.9)
 
         self.addChild(pauseButton)
         self.addChild(life1)
@@ -229,19 +232,38 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
         tintScreen.name = "tintScreen"
         self.addChild(tintScreen)
         
-        let adBackground = SKSpriteNode(imageNamed: "adBackground")
-        adBackground.position = CGPoint(x: self.frame.width/2, y: self.frame.height * 0.5)
-        adBackground.setScale(1.0)
-        adBackground.zPosition = 4
-        self.addChild(adBackground)
-        let continueText = SKLabelNode(fontNamed: "Futura")
-        continueText.fontColor = yellow
-        continueText.text = "Continue"
-        continueText.fontSize = 20
-        continueText.position = CGPoint(x: self.frame.width/2, y: adBackground.position.y * 0.825)
-        continueText.zPosition = 5
-        continueText.name = "continueText"
-        self.addChild(continueText)
+        let gameOverBackground = SKSpriteNode(imageNamed: "gameOver")
+        gameOverBackground.zPosition = 3
+        gameOverBackground.position = CGPoint(x: self.frame.width/2, y: self.highScoreLabel.position.y * 0.65)
+        self.addChild(gameOverBackground)
+        
+        let gameOverMainMenuButton = SKSpriteNode(imageNamed: "pillButtonGreen")
+        gameOverMainMenuButton.zPosition = 4
+        gameOverMainMenuButton.position = CGPoint(x: self.frame.width/2, y: self.highScoreLabel.position.y * 0.85)
+        gameOverMainMenuButton.setScale(0.1)
+        self.addChild(gameOverMainMenuButton)
+        
+        let gameOverPlayAgainButton = SKSpriteNode(imageNamed: "pillButtonBlue")
+        gameOverPlayAgainButton.zPosition = 4
+        gameOverPlayAgainButton.position = CGPoint(x: self.frame.width/2, y: self.highScoreLabel.position.y * 0.7333)
+        gameOverPlayAgainButton.setScale(0.1)
+        self.addChild(gameOverPlayAgainButton)
+        
+        let gameOverGameCenterButton = SKSpriteNode(imageNamed: "pillButtonGrey")
+        gameOverGameCenterButton.zPosition = 4
+        gameOverGameCenterButton.position = CGPoint(x: self.frame.width/2, y: self.highScoreLabel.position.y * 0.5)
+        gameOverGameCenterButton.setScale(0.1)
+        self.addChild(gameOverGameCenterButton)
+        
+        let gameOverMainMenuLabel = SKLabelNode(fontNamed: "Futura")
+        gameOverMainMenuLabel.fontColor = SKColor.whiteColor()
+        gameOverMainMenuLabel.fontSize = 16
+        gameOverMainMenuLabel.position = CGPoint(x: gameOverMainMenuButton.position.x, y: gameOverMainMenuButton.position.y * 0.99)
+        gameOverMainMenuLabel.zPosition = 5
+        gameOverMainMenuLabel.text = "Main Menu"
+        self.addChild(gameOverMainMenuLabel)
+        
+        let gameOverPlayAgainLabel = SKLabelNode(fontNamed: "Futura")
         
         title.zPosition = 3
         highScoreLabel.zPosition = 3
@@ -335,11 +357,7 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
 //            if self.nodeAtPoint(location).name == "continueText" && isGameOver == true {
 //                println("Ïˆ´¨Óıˆ∑º™•™ª£†¶•ÓÏ˚ÔÆÒÎ∏Ô Ø´ÔÏˆ¨ÓÎ´ıÔŒÓˆ´Ó¨´‰")
 //            }
-            
-            if CGRectContainsPoint(CGRect(x: self.frame.origin.x, y: adBackground.position.y * 0.25, width: self.frame.height, height: adBackground.frame.height * 0.5), location) {
-                println("GERILUGUIRIUERFGIRUE")
-            }
-            
+
             if CGRectContainsPoint(pauseButton.frame, location) && (!isGamePaused) {
                 
                 pauseGame()
@@ -417,9 +435,9 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
         let bubbleRotationAction = SKAction.rotateByAngle(CGFloat(M_PI), duration:1)
         bubble.runAction(SKAction.repeatActionForever(bubbleRotationAction))
         bubble.physicsBody?.categoryBitMask = self.bubbleCategory
-        bubble.physicsBody?.contactTestBitMask = self.bottomCategory
+        bubble.physicsBody?.contactTestBitMask = self.bottomCategory | self.topCategory
         
-        if firstBody.categoryBitMask == bubbleCategory && secondBody.categoryBitMask == bottomCategory {
+        if firstBody.categoryBitMask == bubbleCategory && secondBody.categoryBitMask == bottomCategory && isAntiGravity == false {
             if NSUserDefaults.standardUserDefaults().boolForKey("SFX") == true {
             playSound(bubblePop)
             }
@@ -450,6 +468,37 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
             //bubble.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 0))
         }
         
+        if firstBody.categoryBitMask == bubbleCategory && secondBody.categoryBitMask == topCategory && isAntiGravity == true {
+            println("SUCSESS: ƒ©´ø´ƒ©¥ø¨´∑¥ƒ∫˙∆¬¨¬¨∑∂ˆ©ˆ†¥√∑∂§∑¨ç¥®")
+            if NSUserDefaults.standardUserDefaults().boolForKey("SFX") == true {
+                playSound(bubblePop)
+            }
+            firstBody.node?.removeFromParent()
+            --lives
+            justFailed = true
+            if lives < 3 {
+                
+                life1.removeFromParent()
+                
+            }
+            
+            if lives < 1 {
+                
+                life2.removeFromParent()
+                
+            }
+            
+            if lives < -1 {
+                
+                life3.removeFromParent()
+                isGameOver = true
+                gameOver()
+                //game is over at this point
+                
+            }
+            //self.addChild(bubble)
+            //bubble.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 0))
+        }
     }
 
     func didEndContact(contact: SKPhysicsContact) {
@@ -564,7 +613,7 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
             let bubbleRotationAction = SKAction.rotateByAngle(CGFloat(M_PI), duration:1)
             bubble.runAction(SKAction.repeatActionForever(bubbleRotationAction))
             bubble.physicsBody?.categoryBitMask = self.bubbleCategory
-            bubble.physicsBody?.contactTestBitMask = self.bottomCategory
+            bubble.physicsBody?.contactTestBitMask = self.bottomCategory | self.topCategory
             if self.timePassed % 500 == 0 || self.timePassed == 30 || self.justFailed == true {
                 self.addChild(bubble)
                 bubble.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 0))
