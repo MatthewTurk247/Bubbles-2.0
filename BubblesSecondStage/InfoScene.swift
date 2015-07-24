@@ -56,7 +56,11 @@ class InfoScene:SKScene {
         
         title.fontColor = yellow
         title.text = "BUBBLES"
-        title.fontSize = 64
+        if UIScreen.mainScreen().bounds == CGRect(x: 0.0, y: 0.0, width: 320.0, height: 480.0) {
+            title.fontSize = 50
+        } else {
+            title.fontSize = 64
+        }
         title.position = CGPoint(x: self.frame.width * 0.5, y: self.frame.height * 0.725)
         self.addChild(title)
         

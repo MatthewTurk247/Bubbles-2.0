@@ -19,11 +19,11 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="BigBubble.png" translatesAutoresizingMaskIntoConstraints="NO" id="C0C-A3-puD">
-                    <rect key="frame" x="41" y="231" width="292" height="292"/>
+                    <rect key="frame" x="64" y="253" width="247" height="247"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="C0C-A3-puD" secondAttribute="height" multiplier="1:1" id="Blk-WS-Smm"/>
-                        <constraint firstAttribute="width" constant="292" id="nLZ-wq-zb8"/>
-                        <constraint firstAttribute="height" constant="292" id="sde-Nh-3cU"/>
+                        <constraint firstAttribute="width" constant="247" id="nLZ-wq-zb8"/>
+                        <constraint firstAttribute="height" constant="247" id="sde-Nh-3cU"/>
                     </constraints>
                 </imageView>
             </subviews>
@@ -33,12 +33,12 @@
                 <constraint firstAttribute="centerX" secondItem="C0C-A3-puD" secondAttribute="centerX" id="IAX-HZ-PZE"/>
                 <constraint firstAttribute="centerY" secondItem="C0C-A3-puD" secondAttribute="centerY" constant="-43.5" id="K28-my-EMf"/>
                 <constraint firstAttribute="centerX" secondItem="kId-c2-rCX" secondAttribute="centerX" id="Koa-jz-hwk"/>
-                <constraint firstAttribute="trailing" secondItem="C0C-A3-puD" secondAttribute="trailing" constant="42" id="Tph-me-Sve"/>
+                <constraint firstAttribute="trailing" secondItem="C0C-A3-puD" secondAttribute="trailing" constant="64" id="Tph-me-Sve"/>
                 <constraint firstItem="kId-c2-rCX" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="56" id="fvb-Df-36g"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
-            <point key="canvasLocation" x="548" y="455"/>
+            <point key="canvasLocation" x="547.5" y="454.5"/>
         </view>
     </objects>
     <resources>

@@ -79,7 +79,11 @@ class GameScene: SKScene {
         
         title.fontColor = yellow
         title.text = "BUBBLES"
-        title.fontSize = 64
+        if UIScreen.mainScreen().bounds == CGRect(x: 0.0, y: 0.0, width: 320.0, height: 480.0) {
+            title.fontSize = 50
+        } else {
+            title.fontSize = 64
+        }
         title.position = CGPoint(x: self.frame.width * 0.5, y: self.frame.height * 0.725)
         self.addChild(title)
         
@@ -160,14 +164,16 @@ class GameScene: SKScene {
         bottomRight.setScale(1.0)
         bottomRight.zPosition = topVacuum.zPosition - 1
         //self.addChild(bottomRight)
-        
-        settingsButton.position = CGPoint(x: bottomLeftRect.frame.width - 4*(settingsButton.frame.width), y: bottomLeftRect.frame.height/2)
+        println("Hello \(bottomLeft.position)")
+        settingsButton.position = CGPoint(x: (self.frame.width * 0.5) - topLeft.frame.width, y: bottomLeftRect.frame.height/2)
         settingsButton.zPosition = bottomLeft.zPosition + 5
+        settingsButton.setScale(0.6667)
         self.addChild(settingsButton)
         
-        infoDisclosureButton.position = CGPointMake(bottomRightRect.frame.width/2 + 4*(infoDisclosureButton.frame.width), bottomRightRect.frame.height/2)
+        infoDisclosureButton.position = CGPointMake((self.frame.width * 0.5) + topRight.frame.width, bottomRightRect.frame.height/2)
         println(infoDisclosureButton.position)
         infoDisclosureButton.zPosition = bottomRightRect.zPosition + 5
+        infoDisclosureButton.setScale(0.6667)
         self.addChild(infoDisclosureButton)
         
         pauseButton.position = CGPoint(x: topLeft.position.x * 0.95, y: topLeft.position.y * 1.015)

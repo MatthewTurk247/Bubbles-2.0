@@ -46,7 +46,11 @@ class SettingsScene:SKScene, UINavigationControllerDelegate {
         self.scene?.backgroundColor = blue
         title.fontColor = yellow
         title.text = "BUBBLES"
-        title.fontSize = 64
+        if UIScreen.mainScreen().bounds == CGRect(x: 0.0, y: 0.0, width: 320.0, height: 480.0) {
+            title.fontSize = 50
+        } else {
+            title.fontSize = 64
+        }
         title.position = CGPoint(x: self.frame.width * 0.5, y: self.frame.height * 0.725)
         self.addChild(title)
         
@@ -259,12 +263,8 @@ class SettingsScene:SKScene, UINavigationControllerDelegate {
                     var gc = GKGameCenterViewController()
                     vc?.presentViewController(gc, animated: true, completion: nil)
                     //gc.delegate = self.view?.window?.rootViewController?.navigationController?.delegate
-                    gc.delegate = GameViewController().navigationController?.delegate
+                    gc.delegate = self
                     //gc.delegate = self
-                    func gameCenterViewControllerDidFinish(gameCenterViewController: GKGameCenterViewController!) {
-                        gameCenterViewController.dismissViewControllerAnimated(true, completion: nil)
-                        
-                    }
                 }
                 func saveHighscoreToLeaderboard(score:Int) {
                     
@@ -290,5 +290,10 @@ class SettingsScene:SKScene, UINavigationControllerDelegate {
                 showLeader()
             }
         }
+    }
+    
+    func gameCenterViewControllerDidFinish(gameCenterViewController: GKGameCenterViewController!) {
+        gameCenterViewController.dismissViewControllerAnimated(true, completion: nil)
+        
     }
 }

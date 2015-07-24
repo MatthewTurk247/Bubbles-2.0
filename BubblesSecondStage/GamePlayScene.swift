@@ -13,7 +13,7 @@ import GameKit
 import AVFoundation
 import QuartzCore
 
-class GamePlayScene:SKScene, SKPhysicsContactDelegate {
+class GamePlayScene:SKScene, SKPhysicsContactDelegate, UINavigationControllerDelegate, GKGameCenterControllerDelegate {
     
     let versionLabel:SKLabelNode = SKLabelNode(fontNamed: "Futura")
     var version:AnyObject! = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleShortVersionString")
@@ -67,14 +67,17 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
     let topVacuumTextures = [SKTexture(imageNamed: "topAnim0"), SKTexture(imageNamed: "topAnim1")]
 
     override func didMoveToView(view: SKView) {
-        
         println(isAntiGravity)
         self.physicsWorld.gravity = CGVector(dx: 0, dy: -3.333)
         self.physicsWorld.contactDelegate = self
         self.view?.scene?.backgroundColor = blue
         title.fontColor = yellow
         title.text = "\(score)"
+        if UIScreen.mainScreen().bounds == CGRect(x: 0.0, y: 0.0, width: 320.0, height: 480.0) {
+            title.fontSize = 50
+        } else {
         title.fontSize = 64
+        }
         title.position = CGPoint(x: self.frame.width * 0.5, y: self.frame.height * 0.725)
         self.addChild(title)
         pauseMenuQuitButton.zPosition = -1
@@ -99,6 +102,7 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
         var bottomRect = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.width, 1)
         let bottom = SKNode()
         bottom.physicsBody = SKPhysicsBody(edgeLoopFromRect: bottomRect)
+        //bottom.physicsBody?.usesPreciseCollisionDetection = true
         self.addChild(bottom)
         
         bottom.physicsBody?.categoryBitMask = bottomCategory
@@ -106,6 +110,7 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
         var topRect = CGRectMake(self.frame.origin.x, self.frame.height, self.frame.width, 1)
         let top = SKNode()
         top.physicsBody = SKPhysicsBody(edgeLoopFromRect: topRect)
+        //top.physicsBody?.usesPreciseCollisionDetection = true
         self.addChild(top)
         
         top.physicsBody?.categoryBitMask = topCategory
@@ -179,7 +184,7 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
         bubble.name = "bubble"
         pauseButton.position = CGPoint(x: topLeftRect.frame.width * 0.25, y: topLeft.position.y * 1.02)
         pauseButton.zPosition = topLeft.zPosition + 5
-        life1.position = CGPoint(x: topRightRect.frame.width/1.3, y: topRight.position.y * 1.05)
+        life1.position = CGPoint(x: topRightRect.frame.width/1.3, y: topRight.position.y * 1.045)
         life1.zPosition = topRight.zPosition + 5
         life1.setScale(0.9)
         
@@ -217,7 +222,6 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
     }
     
     func gameOver() {
-        
         self.topVacuum.texture = SKTexture(imageNamed: "topVacuumIdle")
         self.bottomVacuum.texture = SKTexture(imageNamed: "bottomVacuumIdle")
         self.topVacuum.color = SKColor(red: 0/255.0, green: 0/255.0, blue: 0/255.0, alpha: 0/255.0)
@@ -235,25 +239,32 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
         let gameOverBackground = SKSpriteNode(imageNamed: "gameOver")
         gameOverBackground.zPosition = 3
         gameOverBackground.position = CGPoint(x: self.frame.width/2, y: self.highScoreLabel.position.y * 0.65)
+        if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
+            gameOverBackground.yScale = 1.5
+        } else if UIScreen.mainScreen().bounds == CGRect(x: 0.0, y: 0.0, width: 320.0, height: 480.0) {
+            gameOverBackground.yScale = 0.85
+        } else {
+            gameOverBackground.yScale = 1.0
+        }
         self.addChild(gameOverBackground)
         
         let gameOverMainMenuButton = SKSpriteNode(imageNamed: "pillButtonGreen")
         gameOverMainMenuButton.zPosition = 4
-        gameOverMainMenuButton.position = CGPoint(x: self.frame.width/2, y: self.highScoreLabel.position.y * 0.85)
+        gameOverMainMenuButton.position = CGPoint(x: self.frame.width/2, y: gameOverBackground.position.y * 1.3)
         gameOverMainMenuButton.setScale(0.1)
         gameOverMainMenuButton.name = "MainMenuButton"
         self.addChild(gameOverMainMenuButton)
         
         let gameOverPlayAgainButton = SKSpriteNode(imageNamed: "pillButtonBlue")
         gameOverPlayAgainButton.zPosition = 4
-        gameOverPlayAgainButton.position = CGPoint(x: self.frame.width/2, y: self.highScoreLabel.position.y * 0.7333)
+        gameOverPlayAgainButton.position = CGPoint(x: self.frame.width/2, y: gameOverBackground.position.y * 1.0)
         gameOverPlayAgainButton.setScale(0.1)
         gameOverPlayAgainButton.name = "PlayAgainButton"
         self.addChild(gameOverPlayAgainButton)
         
         let gameOverGameCenterButton = SKSpriteNode(imageNamed: "pillButtonGrey")
         gameOverGameCenterButton.zPosition = 4
-        gameOverGameCenterButton.position = CGPoint(x: self.frame.width/2, y: self.highScoreLabel.position.y * 0.5)
+        gameOverGameCenterButton.position = CGPoint(x: self.frame.width/2, y: gameOverBackground.position.y * 0.7)
         gameOverGameCenterButton.setScale(0.1)
         gameOverGameCenterButton.name = "GameCenterButton"
         self.addChild(gameOverGameCenterButton)
@@ -389,12 +400,8 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
                     var gc = GKGameCenterViewController()
                     vc?.presentViewController(gc, animated: true, completion: nil)
                     //gc.delegate = self.view?.window?.rootViewController?.navigationController?.delegate
-                    gc.delegate = GameViewController().navigationController?.delegate
+                    gc.delegate = self
                     //gc.delegate = self
-                    func gameCenterViewControllerDidFinish(gameCenterViewController: GKGameCenterViewController!) {
-                        gameCenterViewController.dismissViewControllerAnimated(true, completion: nil)
-                        
-                    }
                 }
                 func saveHighscoreToLeaderboard(score:Int) {
                     
@@ -511,6 +518,7 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
         bubble.yScale = 1
         bubble.position = CGPoint(x: self.randRange(self.frame.width * 0.35, upper: self.frame.width * 0.65), y: self.frame.height/2)
         bubble.name = "bubble"
+        bubble.physicsBody?.usesPreciseCollisionDetection = true
         let bubbleRotationAction = SKAction.rotateByAngle(CGFloat(M_PI), duration:1)
         bubble.runAction(SKAction.repeatActionForever(bubbleRotationAction))
         bubble.physicsBody?.categoryBitMask = self.bubbleCategory
@@ -672,7 +680,11 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
         if self.isGameOver == true {
             
             var highScore = NSUserDefaults.standardUserDefaults().integerForKey("highscore")
-            title.text = "LOSER"
+            if score >= highScore {
+                title.text = "NICE"
+            } else {
+                title.text = "FAIL"
+            }
             highScoreLabel.text = "SCORE: \(score)   BEST: \(highScore)"
             
         }
@@ -688,6 +700,7 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
             bubble.yScale = 1
             bubble.position = CGPoint(x: self.randRange(self.frame.width * 0.35, upper: self.frame.width * 0.65), y: self.frame.height/2)
             bubble.name = "bubble"
+            bubble.physicsBody?.usesPreciseCollisionDetection = true
             let bubbleRotationAction = SKAction.rotateByAngle(CGFloat(M_PI), duration:1)
             bubble.runAction(SKAction.repeatActionForever(bubbleRotationAction))
             bubble.physicsBody?.categoryBitMask = self.bubbleCategory
@@ -702,4 +715,9 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate {
         self.runAction(handleBubbles)
     }
 
+    func gameCenterViewControllerDidFinish(gameCenterViewController: GKGameCenterViewController!) {
+        gameCenterViewController.dismissViewControllerAnimated(true, completion: nil)
+        
+    }
+    
 }
