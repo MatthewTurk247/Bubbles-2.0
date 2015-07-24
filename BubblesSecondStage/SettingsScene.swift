@@ -10,6 +10,7 @@ import SpriteKit
 import Foundation
 import GameKit
 import UIKit
+import AVFoundation
 
 class SettingsScene:SKScene, UINavigationControllerDelegate {
     let title:SKLabelNode = SKLabelNode(fontNamed: "Futura")
@@ -39,15 +40,24 @@ class SettingsScene:SKScene, UINavigationControllerDelegate {
     var musicIsEnabled:Bool? = NSUserDefaults.standardUserDefaults().boolForKey("music")
     var SFXAreEnabled:Bool? = NSUserDefaults.standardUserDefaults().boolForKey("SFX")
     var notificationsAreEnabled:Bool? = NSUserDefaults.standardUserDefaults().boolForKey("notifs")
+    var backgroundMusicPlayer:AVAudioPlayer = AVAudioPlayer()
 
     override func didMoveToView(view: SKView) {
         
+        var bgMusicURL:NSURL = NSBundle.mainBundle().URLForResource("neverMind", withExtension: "mp3")!
+        backgroundMusicPlayer = AVAudioPlayer(contentsOfURL: bgMusicURL, error: nil)
+        backgroundMusicPlayer.numberOfLoops = -1
+        backgroundMusicPlayer.volume = 0.5
+        if NSUserDefaults.standardUserDefaults().boolForKey("music") == true {
+            backgroundMusicPlayer.prepareToPlay()
+            backgroundMusicPlayer.play()
+        }
         println(NSUserDefaults.standardUserDefaults().integerForKey("highscore"))
         self.scene?.backgroundColor = blue
         title.fontColor = yellow
         title.text = "BUBBLES"
         if UIScreen.mainScreen().bounds == CGRect(x: 0.0, y: 0.0, width: 320.0, height: 480.0) {
-            title.fontSize = 50
+            title.fontSize = 45
         } else {
             title.fontSize = 64
         }
@@ -221,6 +231,9 @@ class SettingsScene:SKScene, UINavigationControllerDelegate {
                 theGame.size = skView.bounds.size
                 self.removeAllChildren()
                 self.removeAllActions()
+                if backgroundMusicPlayer.playing == true {
+                    backgroundMusicPlayer.pause()
+                }
                 skView.presentScene(theGame, transition: SKTransition.crossFadeWithDuration(0.25))
             }
             if CGRectContainsPoint(restoreGameButton.frame, location) || CGRectContainsPoint(restoreGameText.frame, location) {

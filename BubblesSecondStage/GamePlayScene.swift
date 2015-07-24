@@ -13,7 +13,7 @@ import GameKit
 import AVFoundation
 import QuartzCore
 
-class GamePlayScene:SKScene, SKPhysicsContactDelegate, UINavigationControllerDelegate, GKGameCenterControllerDelegate {
+class GamePlayScene:SKScene, SKPhysicsContactDelegate, UINavigationControllerDelegate, GKGameCenterControllerDelegate, ADBannerViewDelegate {
     
     let versionLabel:SKLabelNode = SKLabelNode(fontNamed: "Futura")
     var version:AnyObject! = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleShortVersionString")
@@ -26,6 +26,7 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate, UINavigationControllerDel
     {
         runAction(sound)
     }
+    var adBannerView:ADBannerView!
     var justFailed:Bool = false
     var isGameOver = false
     let title:SKLabelNode = SKLabelNode(fontNamed: "Futura")
@@ -65,8 +66,18 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate, UINavigationControllerDel
     let topCategory:UInt32 = 0x1 << 2
     var isAntiGravity:Bool = false
     let topVacuumTextures = [SKTexture(imageNamed: "topAnim0"), SKTexture(imageNamed: "topAnim1")]
+    var backgroundMusicPlayer:AVAudioPlayer = AVAudioPlayer()
 
     override func didMoveToView(view: SKView) {
+        
+        var bgMusicURL:NSURL = NSBundle.mainBundle().URLForResource("neverMind", withExtension: "mp3")!
+        backgroundMusicPlayer = AVAudioPlayer(contentsOfURL: bgMusicURL, error: nil)
+        backgroundMusicPlayer.numberOfLoops = -1
+        backgroundMusicPlayer.volume = 0.5
+        if NSUserDefaults.standardUserDefaults().boolForKey("music") == true {
+            backgroundMusicPlayer.prepareToPlay()
+            backgroundMusicPlayer.play()
+        }
         println(isAntiGravity)
         self.physicsWorld.gravity = CGVector(dx: 0, dy: -3.333)
         self.physicsWorld.contactDelegate = self
@@ -74,7 +85,7 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate, UINavigationControllerDel
         title.fontColor = yellow
         title.text = "\(score)"
         if UIScreen.mainScreen().bounds == CGRect(x: 0.0, y: 0.0, width: 320.0, height: 480.0) {
-            title.fontSize = 50
+            title.fontSize = 45
         } else {
         title.fontSize = 64
         }
@@ -184,6 +195,7 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate, UINavigationControllerDel
         bubble.name = "bubble"
         pauseButton.position = CGPoint(x: topLeftRect.frame.width * 0.25, y: topLeft.position.y * 1.02)
         pauseButton.zPosition = topLeft.zPosition + 5
+        pauseButton.name = "pauseButton"
         life1.position = CGPoint(x: topRightRect.frame.width/1.3, y: topRight.position.y * 1.045)
         life1.zPosition = topRight.zPosition + 5
         life1.setScale(0.9)
@@ -222,6 +234,7 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate, UINavigationControllerDel
     }
     
     func gameOver() {
+        
         self.topVacuum.texture = SKTexture(imageNamed: "topVacuumIdle")
         self.bottomVacuum.texture = SKTexture(imageNamed: "bottomVacuumIdle")
         self.topVacuum.color = SKColor(red: 0/255.0, green: 0/255.0, blue: 0/255.0, alpha: 0/255.0)
@@ -306,6 +319,7 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate, UINavigationControllerDel
         
         isGamePaused = true
         self.paused = true
+        backgroundMusicPlayer.pause()
         //Add pause menu etc.
         let tintScreenRect = CGRect(x: self.frame.origin.x, y: self.frame.origin.y, width: self.frame.width, height: self.frame.height)
         let tintScreen = SKShapeNode(rect: tintScreenRect)
@@ -334,7 +348,8 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate, UINavigationControllerDel
         
         isGamePaused = false
         self.paused = false
-        GameViewController().backgroundMusicPlayer.volume = 0.5
+        backgroundMusicPlayer.prepareToPlay()
+        backgroundMusicPlayer.play()
         //Remove pause menu etc.
         childNodeWithName("tintScreen")?.removeFromParent()
         title.zPosition = 2
@@ -371,6 +386,9 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate, UINavigationControllerDel
                 println("MISSED")
             
             }
+            if CGRectContainsPoint(pauseButton.frame, location) && isGamePaused == true {
+                println("PIHUEOFDJOE: RESUME")
+            }
             
             if self.nodeAtPoint(location).name == "MainMenuButton" || self.nodeAtPoint(location).name == "MainMenuLabel" && isGameOver == true {
                 var theGame = GameScene(size: self.view!.bounds.size)
@@ -380,6 +398,10 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate, UINavigationControllerDel
                 theGame.size = skView.bounds.size
                 self.removeAllChildren()
                 self.removeAllActions()
+                adBannerView.removeFromSuperview()
+                if backgroundMusicPlayer.playing == true {
+                    backgroundMusicPlayer.pause()
+                }
                 skView.presentScene(theGame, transition: SKTransition.crossFadeWithDuration(0.25))
             }
             
@@ -391,6 +413,10 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate, UINavigationControllerDel
                 theGamePlay.size = skView.bounds.size
                 self.removeAllChildren()
                 self.removeAllActions()
+                adBannerView.removeFromSuperview()
+                if backgroundMusicPlayer.playing == true {
+                    backgroundMusicPlayer.pause()
+                }
                 skView.presentScene(theGamePlay, transition: SKTransition.crossFadeWithDuration(0.25))
             }
             
@@ -458,6 +484,9 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate, UINavigationControllerDel
                 theGame.size = skView.bounds.size
                 self.removeAllChildren()
                 self.removeAllActions()
+                if backgroundMusicPlayer.playing == true {
+                    backgroundMusicPlayer.pause()
+                }
                 skView.presentScene(theGame, transition: SKTransition.crossFadeWithDuration(0.25))
             }
             
@@ -469,6 +498,9 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate, UINavigationControllerDel
                 theGamePlay.size = skView.bounds.size
                 self.removeAllChildren()
                 self.removeAllActions()
+                if backgroundMusicPlayer.playing == true {
+                    backgroundMusicPlayer.pause()
+                }
                 skView.presentScene(theGamePlay, transition: SKTransition.crossFadeWithDuration(0.25))
             }
             
@@ -548,6 +580,7 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate, UINavigationControllerDel
                 life3.removeFromParent()
                 isGameOver = true
                 gameOver()
+                loadAds()
                 //game is over at this point
                 
             }
@@ -718,6 +751,34 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate, UINavigationControllerDel
     func gameCenterViewControllerDidFinish(gameCenterViewController: GKGameCenterViewController!) {
         gameCenterViewController.dismissViewControllerAnimated(true, completion: nil)
         
+    }
+    
+    func bannerViewActionShouldBegin(banner: ADBannerView!, willLeaveApplication willLeave: Bool) -> Bool {
+        println("Leaving app to the Ad")
+        
+        return true
+    }
+    
+    func bannerViewDidLoadAd(banner: ADBannerView!) {
+        
+        adBannerView.center = CGPoint(x: adBannerView.center.x, y: self.view!.bounds.size.height - GamePlayScene().bottomVacuum.frame.height / 0.78)
+        adBannerView.frame = CGRectOffset(adBannerView.frame,0.0,0.0)
+        println(GamePlayScene().bottomVacuum.frame.height)
+        adBannerView.hidden = false
+        println("Displaying the Ad")
+    }
+    
+    func bannerView(banner: ADBannerView!, didFailToReceiveAdWithError error: NSError!) {
+        //adBannerView.center = CGPoint(x: adBannerView.center.x, y: self.view!.bounds.size.height + self.view!.bounds.size.height)
+        println("Ad is not available")
+    }
+    
+    func loadAds() {
+        adBannerView = ADBannerView(frame: CGRect.zeroRect)
+        adBannerView.frame = CGRectOffset(adBannerView.frame,0,0.0)
+        adBannerView.delegate = self
+        adBannerView.hidden = true
+        self.view!.addSubview(adBannerView)
     }
     
 }

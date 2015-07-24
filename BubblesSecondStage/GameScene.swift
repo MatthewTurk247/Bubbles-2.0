@@ -9,6 +9,7 @@
 import Foundation
 import SpriteKit
 import GameKit
+import AVFoundation
 
 class GameScene: SKScene {
 
@@ -43,9 +44,18 @@ class GameScene: SKScene {
     let life1 = SKSpriteNode(imageNamed: "heart")
     let life2 = SKSpriteNode(imageNamed: "heart")
     let life3 = SKSpriteNode(imageNamed: "heart")
+    var backgroundMusicPlayer:AVAudioPlayer = AVAudioPlayer()
     
     override func didMoveToView(view: SKView) {
 
+        var bgMusicURL:NSURL = NSBundle.mainBundle().URLForResource("neverMind", withExtension: "mp3")!
+        backgroundMusicPlayer = AVAudioPlayer(contentsOfURL: bgMusicURL, error: nil)
+        backgroundMusicPlayer.numberOfLoops = -1
+        backgroundMusicPlayer.volume = 0.5
+        if NSUserDefaults.standardUserDefaults().boolForKey("music") == true {
+            backgroundMusicPlayer.prepareToPlay()
+            backgroundMusicPlayer.play()
+        }
         println(bottomRight.yScale)
         println(bottomRight.frame.height)
         println(UIScreen.mainScreen().bounds)
@@ -80,7 +90,7 @@ class GameScene: SKScene {
         title.fontColor = yellow
         title.text = "BUBBLES"
         if UIScreen.mainScreen().bounds == CGRect(x: 0.0, y: 0.0, width: 320.0, height: 480.0) {
-            title.fontSize = 50
+            title.fontSize = 45
         } else {
             title.fontSize = 64
         }
@@ -204,6 +214,9 @@ class GameScene: SKScene {
                 theInfo.size = skView.bounds.size
                 self.removeAllChildren()
                 self.removeAllActions()
+                if backgroundMusicPlayer.playing == true {
+                    backgroundMusicPlayer.pause()
+                }
                 skView.presentScene(theInfo, transition: SKTransition.crossFadeWithDuration(0.25))
             }
             
@@ -215,6 +228,9 @@ class GameScene: SKScene {
                 theSettings.size = skView.bounds.size
                 self.removeAllChildren()
                 self.removeAllActions()
+                if backgroundMusicPlayer.playing == true {
+                    backgroundMusicPlayer.pause()
+                }
                 skView.presentScene(theSettings, transition: SKTransition.crossFadeWithDuration(0.25))
             }
 
@@ -227,6 +243,9 @@ class GameScene: SKScene {
                     theGamePlay.size = skView.bounds.size
                     self.removeAllChildren()
                     self.removeAllActions()
+                    if backgroundMusicPlayer.playing == true {
+                    backgroundMusicPlayer.pause()
+                    }
                     skView.presentScene(theGamePlay, transition: SKTransition.crossFadeWithDuration(0.25))
             }
                 
