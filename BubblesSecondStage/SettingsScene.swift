@@ -12,7 +12,7 @@ import GameKit
 import UIKit
 import AVFoundation
 
-class SettingsScene:SKScene, UINavigationControllerDelegate {
+class SettingsScene:SKScene, UINavigationControllerDelegate, GKGameCenterControllerDelegate {
     let title:SKLabelNode = SKLabelNode(fontNamed: "Futura")
     let blue = SKColor(red: 29.0/255, green: 141.0/255, blue: 180.0/255, alpha: 1.0)
     let black = SKColor(red: 80.0/255, green: 80.0/255, blue: 80.0/255, alpha: 1.0)
@@ -44,14 +44,14 @@ class SettingsScene:SKScene, UINavigationControllerDelegate {
 
     override func didMoveToView(view: SKView) {
         
-        var bgMusicURL:NSURL = NSBundle.mainBundle().URLForResource("neverMind", withExtension: "mp3")!
-        backgroundMusicPlayer = AVAudioPlayer(contentsOfURL: bgMusicURL, error: nil)
-        backgroundMusicPlayer.numberOfLoops = -1
-        backgroundMusicPlayer.volume = 0.5
-        if NSUserDefaults.standardUserDefaults().boolForKey("music") == true {
-            backgroundMusicPlayer.prepareToPlay()
-            backgroundMusicPlayer.play()
-        }
+//        var bgMusicURL:NSURL = NSBundle.mainBundle().URLForResource("neverMind", withExtension: "mp3")!
+//        backgroundMusicPlayer = AVAudioPlayer(contentsOfURL: bgMusicURL, error: nil)
+//        backgroundMusicPlayer.numberOfLoops = -1
+//        backgroundMusicPlayer.volume = 0.5
+//        if NSUserDefaults.standardUserDefaults().boolForKey("music") == true {
+//            backgroundMusicPlayer.prepareToPlay()
+//            backgroundMusicPlayer.play()
+//        }
         println(NSUserDefaults.standardUserDefaults().integerForKey("highscore"))
         self.scene?.backgroundColor = blue
         title.fontColor = yellow
@@ -110,12 +110,13 @@ class SettingsScene:SKScene, UINavigationControllerDelegate {
         websiteButton.setScale(0.125)
         self.addChild(websiteButton)
         
-        restoreGameButton.position = CGPoint(x: (self.frame.width/2) * 0.52, y: versionLabel.position.y * 0.9)
-        restoreGameButton.zPosition = 2
-        restoreGameButton.setScale(0.089)
-        self.addChild(restoreGameButton)
+//        restoreGameButton.position = CGPoint(x: (self.frame.width/2) * 0.52, y: versionLabel.position.y * 0.9)
+//        restoreGameButton.zPosition = 2
+//        restoreGameButton.setScale(0.089)
+//        self.addChild(restoreGameButton)
         
-        gameCenterButton.position = CGPoint(x: (self.frame.width/2) * 1.48, y: versionLabel.position.y * 0.9)
+        //gameCenterButton.position = CGPoint(x: (self.frame.width/2) * 1.48, y: versionLabel.position.y * 0.9)
+        gameCenterButton.position = CGPoint(x: self.frame.width/2, y: versionLabel.position.y * 0.9)
         gameCenterButton.zPosition = 2
         gameCenterButton.setScale(0.089)
         self.addChild(gameCenterButton)
@@ -139,12 +140,12 @@ class SettingsScene:SKScene, UINavigationControllerDelegate {
         websiteText.zPosition = websiteButton.zPosition + 1
         self.addChild(websiteText)
         
-        restoreGameText.fontColor = SKColor.whiteColor()
-        restoreGameText.text = "Restore Game"
-        restoreGameText.fontSize = 16
-        restoreGameText.position = CGPoint(x: restoreGameButton.position.x, y: restoreGameButton.position.y * 0.99)
-        restoreGameText.zPosition = restoreGameButton.zPosition + 1
-        self.addChild(restoreGameText)
+//        restoreGameText.fontColor = SKColor.whiteColor()
+//        restoreGameText.text = "Restore Game"
+//        restoreGameText.fontSize = 16
+//        restoreGameText.position = CGPoint(x: restoreGameButton.position.x, y: restoreGameButton.position.y * 0.99)
+//        restoreGameText.zPosition = restoreGameButton.zPosition + 1
+//        self.addChild(restoreGameText)
         
         gameCenterText.fontColor = SKColor.whiteColor()
         
@@ -224,18 +225,16 @@ class SettingsScene:SKScene, UINavigationControllerDelegate {
             let location = touch.locationInNode(self)
             let backButton = self.childNodeWithName("backButton")
             if CGRectContainsPoint(backButton!.frame, location) {
-                var theGame = GameScene(size: self.view!.bounds.size)
+                var theGame = GameScene(size: self.size)
                 let skView = self.view as SKView!
                 skView.ignoresSiblingOrder = true
                 theGame.scaleMode = .AspectFill
                 theGame.size = skView.bounds.size
                 self.removeAllChildren()
                 self.removeAllActions()
-                if backgroundMusicPlayer.playing == true {
-                    backgroundMusicPlayer.pause()
-                }
                 skView.presentScene(theGame, transition: SKTransition.crossFadeWithDuration(0.25))
             }
+            
             if CGRectContainsPoint(restoreGameButton.frame, location) || CGRectContainsPoint(restoreGameText.frame, location) {
                 
                 //println(lead.scores[lead.localPlayerScore.rank])
@@ -276,7 +275,7 @@ class SettingsScene:SKScene, UINavigationControllerDelegate {
                     var gc = GKGameCenterViewController()
                     vc?.presentViewController(gc, animated: true, completion: nil)
                     //gc.delegate = self.view?.window?.rootViewController?.navigationController?.delegate
-                    gc.delegate = self
+                    gc.gameCenterDelegate = self
                     //gc.delegate = self
                 }
                 func saveHighscoreToLeaderboard(score:Int) {

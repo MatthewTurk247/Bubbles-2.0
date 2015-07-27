@@ -53,16 +53,16 @@ class InfoScene:SKScene {
     var backgroundMusicPlayer:AVAudioPlayer = AVAudioPlayer()
     
     override func didMoveToView(view: SKView) {
-        
-        var bgMusicURL:NSURL = NSBundle.mainBundle().URLForResource("neverMind", withExtension: "mp3")!
-        backgroundMusicPlayer = AVAudioPlayer(contentsOfURL: bgMusicURL, error: nil)
-        backgroundMusicPlayer.numberOfLoops = -1
-        backgroundMusicPlayer.volume = 0.5
-        if NSUserDefaults.standardUserDefaults().boolForKey("music") == true {
-            backgroundMusicPlayer.prepareToPlay()
-            backgroundMusicPlayer.play()
-        }
-        
+//        
+//        var bgMusicURL:NSURL = NSBundle.mainBundle().URLForResource("neverMind", withExtension: "mp3")!
+//        backgroundMusicPlayer = AVAudioPlayer(contentsOfURL: bgMusicURL, error: nil)
+//        backgroundMusicPlayer.numberOfLoops = -1
+//        backgroundMusicPlayer.volume = 0.5
+//        if NSUserDefaults.standardUserDefaults().boolForKey("music") == true {
+//            backgroundMusicPlayer.prepareToPlay()
+//            backgroundMusicPlayer.play()
+//        }
+//        
         self.scene?.backgroundColor = blue
         
         title.fontColor = yellow
@@ -177,9 +177,6 @@ class InfoScene:SKScene {
                 theGame.size = skView.bounds.size
                 self.removeAllChildren()
                 self.removeAllActions()
-                if backgroundMusicPlayer.playing == true {
-                    backgroundMusicPlayer.pause()
-                }
                 skView.presentScene(theGame, transition: SKTransition.crossFadeWithDuration(0.25))
             }
             if CGRectContainsPoint(tutorialButton.frame, location) {
@@ -194,9 +191,6 @@ class InfoScene:SKScene {
                 theInfo.size = skView.bounds.size
                 self.removeAllChildren()
                 self.removeAllActions()
-                if backgroundMusicPlayer.playing == true {
-                    backgroundMusicPlayer.pause()
-                }
                 skView.presentScene(theInfo, transition: SKTransition.crossFadeWithDuration(0.25))
             }
         }

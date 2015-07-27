@@ -42,6 +42,7 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate, UINavigationControllerDel
     let bottomVacuum = SKSpriteNode(imageNamed: "bottomVacuumIdle")
     var score = 0
     var timePassed:Int = 0
+    var justSwitched:Bool = false
     var isGamePaused:Bool = false
     let topLeft = SKSpriteNode(imageNamed: "cornerButton")
     let topRight = SKSpriteNode(imageNamed: "cornerButton")
@@ -50,6 +51,7 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate, UINavigationControllerDel
     let settingsButton = SKSpriteNode(imageNamed: "settingsButton")
     let infoDisclosureButton = SKSpriteNode(imageNamed: "infoDisclosureButton")
     let pauseButton = SKSpriteNode(imageNamed: "pauseButton")
+    let resumeButton = SKSpriteNode(imageNamed: "resumeButton")
     var cloudMoveAndRemove = SKAction()
     var cloudTexture = SKTexture(imageNamed: "cloud")
     var lives:Int = 3
@@ -70,6 +72,7 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate, UINavigationControllerDel
 
     override func didMoveToView(view: SKView) {
         
+        pauseButton.setScale(1/3)
         var bgMusicURL:NSURL = NSBundle.mainBundle().URLForResource("neverMind", withExtension: "mp3")!
         backgroundMusicPlayer = AVAudioPlayer(contentsOfURL: bgMusicURL, error: nil)
         backgroundMusicPlayer.numberOfLoops = -1
@@ -96,15 +99,15 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate, UINavigationControllerDel
         pauseMenuRestartButton.zPosition = -1
         pauseMenuRestartText.zPosition = -1
         
+        topVacuum.setScale(1/3)
         topVacuum.position = CGPoint(x: self.frame.width * 0.5, y: self.frame.height - (topVacuum.frame.height/2))
-        topVacuum.setScale(1.0)
         
 //        topVacuum.yScale = 1.2
 //        topVacuum.xScale = 1.2
         topVacuum.zPosition = 4
         self.addChild(topVacuum)
+        bottomVacuum.setScale(1/3)
         bottomVacuum.position = CGPoint(x: self.frame.width * 0.5, y: (bottomVacuum.frame.height/2))
-        bottomVacuum.setScale(1.0)
 //        bottomVacuum.yScale = 1.2
 //        bottomVacuum.xScale = 1.2
         bottomVacuum.zPosition = 4
@@ -193,20 +196,32 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate, UINavigationControllerDel
         let bubble:SKSpriteNode = SKSpriteNode(imageNamed: "bubble")
         let bubbleCatagory:UInt64 = 0x1 << 0   //0000000000000000000000000000000000000000000000000000000000000001
         bubble.name = "bubble"
+        if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
+            pauseButton.position = CGPoint(x: topLeftRect.frame.width * 0.25, y: topLeft.position.y)
+        } else {
         pauseButton.position = CGPoint(x: topLeftRect.frame.width * 0.25, y: topLeft.position.y * 1.02)
+        }
         pauseButton.zPosition = topLeft.zPosition + 5
         pauseButton.name = "pauseButton"
+        resumeButton.position = CGPoint(x: self.frame.width/2, y: highScoreLabel.position.y * 0.7333)
+        resumeButton.zPosition = topLeft.zPosition + 5
+        resumeButton.setScale(0.089)
+        resumeButton.name = "resumeButton"
+        if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
+        life1.position = CGPoint(x: topRightRect.frame.width/1.3, y: topRight.position.y * 1.03)
+        } else {
         life1.position = CGPoint(x: topRightRect.frame.width/1.3, y: topRight.position.y * 1.045)
+        }
         life1.zPosition = topRight.zPosition + 5
-        life1.setScale(0.9)
+        life1.setScale(0.3)
         
         life2.position = CGPoint(x: life1.position.x * 1.1, y: life1.position.y * 0.975)
         life2.zPosition = topRight.zPosition + 5
-        life2.setScale(0.9)
+        life2.setScale(0.3)
         
         life3.position = CGPoint(x: life2.position.x * 1.09, y: life2.position.y * 0.9725)
         life3.zPosition = topRight.zPosition + 5
-        life3.setScale(0.9)
+        life3.setScale(0.3)
 
         self.addChild(pauseButton)
         self.addChild(life1)
@@ -257,7 +272,7 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate, UINavigationControllerDel
         } else if UIScreen.mainScreen().bounds == CGRect(x: 0.0, y: 0.0, width: 320.0, height: 480.0) {
             gameOverBackground.yScale = 0.85
         } else {
-            gameOverBackground.yScale = 1.0
+            gameOverBackground.yScale = 0.95
         }
         self.addChild(gameOverBackground)
         
@@ -319,7 +334,9 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate, UINavigationControllerDel
         
         isGamePaused = true
         self.paused = true
-        backgroundMusicPlayer.pause()
+//        if NSUserDefaults.standardUserDefaults().boolForKey("music") == true {
+//            backgroundMusicPlayer.pause()
+//        }
         //Add pause menu etc.
         let tintScreenRect = CGRect(x: self.frame.origin.x, y: self.frame.origin.y, width: self.frame.width, height: self.frame.height)
         let tintScreen = SKShapeNode(rect: tintScreenRect)
@@ -331,8 +348,9 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate, UINavigationControllerDel
         title.zPosition = 3
         highScoreLabel.zPosition = 3
         highScoreLabel.text = "PAUSED"
-        pauseButton.texture = SKTexture(imageNamed: "resumeButton")
-        pauseButton.setScale(0.9)
+        pauseButton.removeFromParent()
+        self.addChild(resumeButton)
+        pauseButton.setScale(1/3)
         pauseMenuQuitButton.zPosition = 3
         pauseMenuQuitText.zPosition = 3
         pauseMenuRestartButton.zPosition = 3
@@ -348,15 +366,18 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate, UINavigationControllerDel
         
         isGamePaused = false
         self.paused = false
-        backgroundMusicPlayer.prepareToPlay()
-        backgroundMusicPlayer.play()
+        if NSUserDefaults.standardUserDefaults().boolForKey("music") == true {
+            backgroundMusicPlayer.prepareToPlay()
+            backgroundMusicPlayer.play()
+        }
         //Remove pause menu etc.
         childNodeWithName("tintScreen")?.removeFromParent()
         title.zPosition = 2
         highScoreLabel.zPosition = 2
         var highScore = NSUserDefaults.standardUserDefaults().integerForKey("highscore")
         highScoreLabel.text = "BEST: \(highScore)"
-        pauseButton.texture = SKTexture(imageNamed: "pauseButton")
+        resumeButton.removeFromParent()
+        self.addChild(pauseButton)
         pauseMenuQuitButton.zPosition = 1
         pauseMenuQuitText.zPosition = 1
         pauseMenuRestartButton.zPosition = 1
@@ -386,10 +407,10 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate, UINavigationControllerDel
                 println("MISSED")
             
             }
-            if CGRectContainsPoint(pauseButton.frame, location) && isGamePaused == true {
-                println("PIHUEOFDJOE: RESUME")
-            }
-            
+//            if CGRectContainsPoint(pauseButton.frame, location) && isGamePaused == true {
+//                println("PIHUEOFDJOE: RESUME")
+//            }
+//            
             if self.nodeAtPoint(location).name == "MainMenuButton" || self.nodeAtPoint(location).name == "MainMenuLabel" && isGameOver == true {
                 var theGame = GameScene(size: self.view!.bounds.size)
                 let skView = self.view as SKView!
@@ -398,8 +419,10 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate, UINavigationControllerDel
                 theGame.size = skView.bounds.size
                 self.removeAllChildren()
                 self.removeAllActions()
+                if adBannerView != nil {
                 adBannerView.removeFromSuperview()
-                if backgroundMusicPlayer.playing == true {
+                }
+                if NSUserDefaults.standardUserDefaults().boolForKey("music") == true {
                     backgroundMusicPlayer.pause()
                 }
                 skView.presentScene(theGame, transition: SKTransition.crossFadeWithDuration(0.25))
@@ -413,8 +436,10 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate, UINavigationControllerDel
                 theGamePlay.size = skView.bounds.size
                 self.removeAllChildren()
                 self.removeAllActions()
+                if adBannerView != nil {
                 adBannerView.removeFromSuperview()
-                if backgroundMusicPlayer.playing == true {
+                }
+                if NSUserDefaults.standardUserDefaults().boolForKey("music") == true {
                     backgroundMusicPlayer.pause()
                 }
                 skView.presentScene(theGamePlay, transition: SKTransition.crossFadeWithDuration(0.25))
@@ -426,7 +451,7 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate, UINavigationControllerDel
                     var gc = GKGameCenterViewController()
                     vc?.presentViewController(gc, animated: true, completion: nil)
                     //gc.delegate = self.view?.window?.rootViewController?.navigationController?.delegate
-                    gc.delegate = self
+                    gc.gameCenterDelegate = self
                     //gc.delegate = self
                 }
                 func saveHighscoreToLeaderboard(score:Int) {
@@ -470,9 +495,15 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate, UINavigationControllerDel
 //                println("Ïˆ´¨Óıˆ∑º™•™ª£†¶•ÓÏ˚ÔÆÒÎ∏Ô Ø´ÔÏˆ¨ÓÎ´ıÔŒÓˆ´Ó¨´‰")
 //            }
 
-            if CGRectContainsPoint(pauseButton.frame, location) && (!isGamePaused) {
+            if self.nodeAtPoint(location).name == "pauseButton" && (!isGamePaused) {
                 
                 pauseGame()
+                
+            }
+            
+            if self.nodeAtPoint(location).name == "resumeButton" && isGamePaused == true {
+                println("SGERTHRTBG: \(isGamePaused)")
+                resumeGame()
                 
             }
             
@@ -484,7 +515,7 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate, UINavigationControllerDel
                 theGame.size = skView.bounds.size
                 self.removeAllChildren()
                 self.removeAllActions()
-                if backgroundMusicPlayer.playing == true {
+                if NSUserDefaults.standardUserDefaults().boolForKey("music") == true {
                     backgroundMusicPlayer.pause()
                 }
                 skView.presentScene(theGame, transition: SKTransition.crossFadeWithDuration(0.25))
@@ -498,7 +529,7 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate, UINavigationControllerDel
                 theGamePlay.size = skView.bounds.size
                 self.removeAllChildren()
                 self.removeAllActions()
-                if backgroundMusicPlayer.playing == true {
+                if NSUserDefaults.standardUserDefaults().boolForKey("music") == true {
                     backgroundMusicPlayer.pause()
                 }
                 skView.presentScene(theGamePlay, transition: SKTransition.crossFadeWithDuration(0.25))
@@ -550,6 +581,7 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate, UINavigationControllerDel
         bubble.yScale = 1
         bubble.position = CGPoint(x: self.randRange(self.frame.width * 0.35, upper: self.frame.width * 0.65), y: self.frame.height/2)
         bubble.name = "bubble"
+        bubble.setScale(1/3)
         bubble.physicsBody?.usesPreciseCollisionDetection = true
         let bubbleRotationAction = SKAction.rotateByAngle(CGFloat(M_PI), duration:1)
         bubble.runAction(SKAction.repeatActionForever(bubbleRotationAction))
@@ -708,12 +740,18 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate, UINavigationControllerDel
         
         if timePassed != 0 && timePassed % 450 == 0 {
             self.physicsWorld.gravity.dy *= -1
+            justSwitched = true
+        }
+        
+        if justSwitched == true {
+            title.text = "SWITCH"
+            justSwitched = false
         }
         
         if self.isGameOver == true {
             
             var highScore = NSUserDefaults.standardUserDefaults().integerForKey("highscore")
-            if score >= highScore {
+            if score >= highScore && score > 0 {
                 title.text = "NICE"
             } else {
                 title.text = "FAIL"
@@ -733,6 +771,7 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate, UINavigationControllerDel
             bubble.yScale = 1
             bubble.position = CGPoint(x: self.randRange(self.frame.width * 0.35, upper: self.frame.width * 0.65), y: self.frame.height/2)
             bubble.name = "bubble"
+            bubble.setScale(1/3)
             bubble.physicsBody?.usesPreciseCollisionDetection = true
             let bubbleRotationAction = SKAction.rotateByAngle(CGFloat(M_PI), duration:1)
             bubble.runAction(SKAction.repeatActionForever(bubbleRotationAction))
@@ -761,9 +800,10 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate, UINavigationControllerDel
     
     func bannerViewDidLoadAd(banner: ADBannerView!) {
         
-        adBannerView.center = CGPoint(x: adBannerView.center.x, y: self.view!.bounds.size.height - GamePlayScene().bottomVacuum.frame.height / 0.78)
+        adBannerView.center = CGPoint(x: adBannerView.center.x, y: self.frame.height - 93.0 / 0.78)
+        println("YFETUIHDJKGEIUYFUJ: \(self.bottomVacuum.frame.height)")
         adBannerView.frame = CGRectOffset(adBannerView.frame,0.0,0.0)
-        println(GamePlayScene().bottomVacuum.frame.height)
+        println(self.bottomVacuum.frame.height)
         adBannerView.hidden = false
         println("Displaying the Ad")
     }

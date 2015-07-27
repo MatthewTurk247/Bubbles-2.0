@@ -106,7 +106,7 @@ class GameScene: SKScene {
         self.addChild(highScoreLabel)
         
         playButton.position = CGPoint(x: self.frame.width/2, y: self.frame.height * 0.45)
-        playButton.setScale(1.0)
+        playButton.setScale(1/3)
         self.addChild(playButton)
         
         playText.fontColor = SKColor.whiteColor()
@@ -116,13 +116,13 @@ class GameScene: SKScene {
         playText.zPosition = 3
         self.addChild(playText)
         
+        topVacuum.setScale(1/3)
         topVacuum.position = CGPoint(x: self.frame.width * 0.5, y: self.frame.height - 0.5 * (topVacuum.frame.height))
-        topVacuum.setScale(1.0)
         topVacuum.zPosition = 4
         self.addChild(topVacuum)
         
+        bottomVacuum.setScale(1/3)
         bottomVacuum.position = CGPoint(x: self.frame.width * 0.5, y: 0.5 * (bottomVacuum.frame.height))
-        bottomVacuum.setScale(1.0)
         bottomVacuum.zPosition = 4
         self.addChild(bottomVacuum)
         
@@ -155,7 +155,7 @@ class GameScene: SKScene {
         self.addChild(bottomLeftRect)
         println(bottomLeftRect.frame.height)
         
-        topVacuum.setScale(1.0)
+        topVacuum.setScale(1/3)
         //self.addChild(topLeft)
         
         topRight.position = CGPoint(x: (self.frame.width * 0.5) + topRight.frame.width, y: topLeft.position.y)
@@ -214,7 +214,7 @@ class GameScene: SKScene {
                 theInfo.size = skView.bounds.size
                 self.removeAllChildren()
                 self.removeAllActions()
-                if backgroundMusicPlayer.playing == true {
+                if NSUserDefaults.standardUserDefaults().boolForKey("music") == true {
                     backgroundMusicPlayer.pause()
                 }
                 skView.presentScene(theInfo, transition: SKTransition.crossFadeWithDuration(0.25))
@@ -228,7 +228,7 @@ class GameScene: SKScene {
                 theSettings.size = skView.bounds.size
                 self.removeAllChildren()
                 self.removeAllActions()
-                if backgroundMusicPlayer.playing == true {
+                if NSUserDefaults.standardUserDefaults().boolForKey("music") == true {
                     backgroundMusicPlayer.pause()
                 }
                 skView.presentScene(theSettings, transition: SKTransition.crossFadeWithDuration(0.25))
@@ -243,9 +243,9 @@ class GameScene: SKScene {
                     theGamePlay.size = skView.bounds.size
                     self.removeAllChildren()
                     self.removeAllActions()
-                    if backgroundMusicPlayer.playing == true {
+                if NSUserDefaults.standardUserDefaults().boolForKey("music") == true {
                     backgroundMusicPlayer.pause()
-                    }
+                }
                     skView.presentScene(theGamePlay, transition: SKTransition.crossFadeWithDuration(0.25))
             }
                 
@@ -270,6 +270,7 @@ class GameScene: SKScene {
             bubble.yScale = 1
             bubble.position = CGPoint(x: self.randRange(self.frame.width * 0.35, upper: self.frame.width * 0.65), y: self.randRange(self.frame.height * 0.25, upper: self.frame.height * 0.75))
             bubble.name = "bubble"
+            bubble.setScale(1/3)
             let bubbleRotationAction = SKAction.rotateByAngle(CGFloat(M_PI), duration:1)
             bubble.runAction(SKAction.repeatActionForever(bubbleRotationAction))
             if self.timePassed % 500 == 0 || self.timePassed == 1 {
