@@ -23,7 +23,7 @@ class SettingsScene:SKScene, UINavigationControllerDelegate, GKGameCenterControl
     var version:AnyObject! = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleShortVersionString")
     let moreInfoLabel = SKLabelNode(fontNamed: "Futura")
     let copyrightNoticeLabel = SKLabelNode(fontNamed: "Futura")
-    let websiteButton = SKSpriteNode(imageNamed: "pillButtonGreen")
+    let websiteButton = SKSpriteNode(imageNamed: "bigPillButtonGreen")
     let websiteText = SKLabelNode(fontNamed: "Futura")
     let restoreGameButton = SKSpriteNode(imageNamed: "pillButtonRed")
     let restoreGameText = SKLabelNode(fontNamed: "Futura")
@@ -65,7 +65,7 @@ class SettingsScene:SKScene, UINavigationControllerDelegate, GKGameCenterControl
         self.addChild(title)
         
         copyrightNoticeLabel.fontColor = SKColor.whiteColor()
-        copyrightNoticeLabel.text = "© \(NSCalendar.currentCalendar().component(NSCalendarUnit.CalendarUnitYear, fromDate: NSDate())) Bubbles, Inc."
+        copyrightNoticeLabel.text = "© \(NSCalendar.currentCalendar().component(NSCalendarUnit.CalendarUnitYear, fromDate: NSDate())) Matthew Turk"
         copyrightNoticeLabel.fontSize = 18
         copyrightNoticeLabel.position = CGPoint(x: self.frame.width/2, y: self.frame.height * 0.08)
         copyrightNoticeLabel.zPosition = 7
@@ -107,7 +107,7 @@ class SettingsScene:SKScene, UINavigationControllerDelegate, GKGameCenterControl
         
         websiteButton.position = CGPoint(x: backButton.frame.width + (backButton.frame.width * 1.5), y: self.frame.height * 0.93)
         websiteButton.zPosition = 6
-        websiteButton.setScale(0.125)
+        websiteButton.setScale(1/3)
         self.addChild(websiteButton)
         
 //        restoreGameButton.position = CGPoint(x: (self.frame.width/2) * 0.52, y: versionLabel.position.y * 0.9)

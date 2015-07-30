@@ -334,9 +334,9 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate, UINavigationControllerDel
         
         isGamePaused = true
         self.paused = true
-//        if NSUserDefaults.standardUserDefaults().boolForKey("music") == true {
-//            backgroundMusicPlayer.pause()
-//        }
+        if NSUserDefaults.standardUserDefaults().boolForKey("music") == true {
+            backgroundMusicPlayer.pause()
+        }
         //Add pause menu etc.
         let tintScreenRect = CGRect(x: self.frame.origin.x, y: self.frame.origin.y, width: self.frame.width, height: self.frame.height)
         let tintScreen = SKShapeNode(rect: tintScreenRect)
@@ -672,6 +672,10 @@ class GamePlayScene:SKScene, SKPhysicsContactDelegate, UINavigationControllerDel
         } else if physicsWorld.gravity.dy < 0 {
             isAntiGravity = false
         }
+        
+        self.paused = isGamePaused
+        println("IS GAME PAUSED\(isGamePaused)")
+        println("SELF\(self.paused)")
         
         func saveHighscoreToLeaderboard(score_:Int) {
             

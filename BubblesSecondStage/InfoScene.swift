@@ -25,9 +25,14 @@ class InfoScene:SKScene {
     let financeAmpersandLaw = SKLabelNode(fontNamed: "Futura")
     let copyrightNoticeLabel = SKLabelNode(fontNamed: "Futura")
     let moreInfoLabel = SKLabelNode(fontNamed: "Futura")
-    let tutorialButton = SKSpriteNode(imageNamed: "pillButtonGreen")
+    let tutorialButton = SKSpriteNode(imageNamed: "bigPillButtonGreen")
     let tutorialText = SKLabelNode(fontNamed: "Futura")
-    let tutorialVideo = SKVideoNode(videoFileNamed: "bubblesTutorialVid.mov")
+    let tutorialVideo4 = SKVideoNode(videoFileNamed: "bubblesTutorialVid.mov")
+    let tutorialVideo5 = SKVideoNode(videoFileNamed: "bubblesTutorial5.mp4")
+    let tutorialVideo6 = SKVideoNode(videoFileNamed: "bubblesTutorial6.mp4")
+    let tutorialVideo6Plus = SKVideoNode(videoFileNamed: "bubblesTutorial6Plus.mp4")
+    let tutorialVideoiPad = SKVideoNode(videoFileNamed: "bubblesTutorialiPad.mp4")
+    let tutorialVideoiPadMini = SKVideoNode(videoFileNamed: "bubblesTutorialiPadMini.mp4")
     let closeButton = SKSpriteNode(imageNamed: "close")
     func watchTutorial() {
         closeButton.position = CGPoint(x: self.frame.width * 0.1, y: self.frame.height * 0.94)
@@ -35,20 +40,20 @@ class InfoScene:SKScene {
         closeButton.name = "backButtonIcon"
         closeButton.setScale(1.0)
         self.addChild(closeButton)
-        tutorialVideo.position = CGPoint(x: self.frame.width/2, y: self.frame.height/2)
-        tutorialVideo.size = self.size
+        tutorialVideo4.position = CGPoint(x: self.frame.width/2, y: self.frame.height/2)
+        tutorialVideo4.size = self.size
         println("About to play")
-        tutorialVideo.zPosition = 10
-        tutorialVideo.alpha = 0.0
-        self.addChild(tutorialVideo)
-        tutorialVideo.runAction(SKAction.fadeAlphaTo(1.0, duration: 0.5))
-        tutorialVideo.play()
+        tutorialVideo4.zPosition = 10
+        tutorialVideo4.alpha = 0.0
+        self.addChild(tutorialVideo4)
+        tutorialVideo4.runAction(SKAction.fadeAlphaTo(1.0, duration: 0.5))
+        tutorialVideo4.play()
     }
     func closeTutorial() {
         closeButton.removeFromParent()
-        tutorialVideo.pause()
-        tutorialVideo.runAction(SKAction.fadeAlphaTo(0.0, duration: 0.5))
-        tutorialVideo.removeFromParent()
+        tutorialVideo4.pause()
+        tutorialVideo4.runAction(SKAction.fadeAlphaTo(0.0, duration: 0.5))
+        tutorialVideo4.removeFromParent()
     }
     var backgroundMusicPlayer:AVAudioPlayer = AVAudioPlayer()
     
@@ -76,7 +81,7 @@ class InfoScene:SKScene {
         self.addChild(title)
         
         copyrightNoticeLabel.fontColor = SKColor.whiteColor()
-        copyrightNoticeLabel.text = "© \(NSCalendar.currentCalendar().component(NSCalendarUnit.CalendarUnitYear, fromDate: NSDate())) Bubbles, Inc."
+        copyrightNoticeLabel.text = "© \(NSCalendar.currentCalendar().component(NSCalendarUnit.CalendarUnitYear, fromDate: NSDate())) Matthew Turk"
         copyrightNoticeLabel.fontSize = 18
         copyrightNoticeLabel.position = CGPoint(x: self.frame.width/2, y: self.frame.height * 0.08)
         copyrightNoticeLabel.zPosition = 7
@@ -111,13 +116,13 @@ class InfoScene:SKScene {
         marketingAmpersandPRLabel.text = "Marketing & PR: First Last"
         marketingAmpersandPRLabel.fontSize = 20
         marketingAmpersandPRLabel.position = CGPoint(x: self.frame.width/2, y: versionLabel.position.y * 0.6)
-        self.addChild(marketingAmpersandPRLabel)
+        //self.addChild(marketingAmpersandPRLabel)
         
         financeAmpersandLaw.fontColor = SKColor.whiteColor()
         financeAmpersandLaw.text = "Finance & Law: First Last"
         financeAmpersandLaw.fontSize = 20
         financeAmpersandLaw.position = CGPoint(x: self.frame.width/2, y: versionLabel.position.y * 0.45)
-        self.addChild(financeAmpersandLaw)
+        //self.addChild(financeAmpersandLaw)
         
         let backButton = SKShapeNode(rect: CGRect(x: self.frame.origin.x, y: self.frame.height - (self.frame.height * 0.14), width: self.frame.width * 0.25, height: self.frame.height * 0.14))
         backButton.fillColor = red
@@ -143,7 +148,7 @@ class InfoScene:SKScene {
         
         tutorialButton.position = CGPoint(x: backButton.frame.width + (backButton.frame.width * 1.5), y: self.frame.height * 0.93)
         tutorialButton.zPosition = 6
-        tutorialButton.setScale(0.125)
+        tutorialButton.setScale(1/3)
         self.addChild(tutorialButton)
         
         let redStrip = SKShapeNode(rect: CGRect(x: self.frame.origin.x, y: self.frame.origin.y, width: self.frame.width, height: self.frame.height * 0.14))
